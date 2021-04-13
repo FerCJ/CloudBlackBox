@@ -1,0 +1,97 @@
+<resources>
+    <string name="app_name">CloudBlackbox</string>
+    <string name="menu_contacto">Contacto</string>
+    <string name="menu_about">Acerca de</string>
+
+    <!-- Inicio de sesión -->
+    <string name="login_email">Correo Electrónico</string>
+    <string name="login_pass">Contraseña</string>
+    <string name="login_btn_Ingresar">Ingresar</string>
+    <string name="login__recuperar"><u>Recuperar contraseña</u></string>
+    <string name="login_registrar"><u>Registrate aquí</u></string>
+    <string name="login_Iniciar">Iniciar Sesión</string>
+    <string name="login_Nocuenta">¿No tienes cuenta?</string>
+    <string name="logo_aplicacion">Logo Aplicacion</string>
+
+    <!-- Registro -->
+    <string name="registro_Registrar">Registro</string>
+    <string name="registro_email">Correo Electrónico</string>
+    <string name="registro_pass">Contraseña</string>
+    <string name="registro_btn_Registrar">Registrar</string>
+    <string name="registro__confirmarpass">Confirmar contraseña</string>
+    <string name="registro_tel1">Tu numero telefónico</string>
+    <string name="registro_tel2">Télefono de emergencia 2</string>
+    <string name="registro_tel3">Télefono de emergencia 3</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="registro_Nombre">"Nombre"</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+    <!-- Recuperar contraseña -->
+    <string name="recuperar_Recuperar">Recuperar contraseña</string>
+    <string name="recuperar_email">Correo Electrónico</string>
+    <string name="recuperar_telefono">Algún número de emergencia registrado</string>
+    <string name="recuperar_btn_Validar">Validar</string>
+    <string name="recuperar__passnew">Contraseña nueva</string>
+    <string name="recuperar_confirmarnewpass">Confirmar contraseña nueva</string>
+    <string name="recuperar_btn_Cambiar">Cambiar contraseña</string>
+
+    <!-- Menu Principal -->
+    <string name="principal_modo">Seleccionar Modo</string>
+    <string name="principal_videos">Videos</string>
+    <string name="principal_trayectorias">Trayectorias</string>
+    <string name="principal_Ubicación">Ubicación</string>
+    <string name="principal_estadisticas">Estadísticas</string>
+
+    <!-- Seleccionar modo -->
+    <string name="seleccionar_trayecto">Modo Trayecto</string>
+    <string name="seleccionar_parking">Modo Parking</string>
+    <string name="seleccionar_btn">Conectar BT</string>
+    <string name="seleccionar_Nombre">Seleccionar Modo</string>
+
+    <!-- Reproducir videos -->
+    <string name="reproducir_Nombre">Reproducir Vídeos</string>
+
+    <!-- Trayectorias -->
+    <string name="trayectorias_Nombre">Trayectorias</string>
+    <string name="title_activity_ubicacion">Map</string>
+
+    <!-- Ubicación -->
+    <string name="ubicacion_Nombre">Ubicación</string>
+
+    <!-- Estadisticas -->
+    <string name="estadisticas_Nombre">Estadísticas</string>
+    <string name="estadisticas_gasolina">Consumo de gasolina</string>
+    <string name="estadisticas_velociad">Velocidad promedio</string>
+    <string name="estadisticas_bateria">Estado batería</string>
+    <string name="estadisticas_RPM">RPM Promedio</string>
+    <string name="estadisticas_distancia">Distancia Recorrida</string>
+
+    <!-- contacto -->
+    <string name="contacto_Nombre">Contacto</string>
+    <string name="contacto_dev1">Miguel A. Nava Salazar </string>
+    <string name="contacto_dev2">Fernando Corona Jimenez</string>
+    <string name="contacto_email1">fercj2807@gmail.com</string>
+    <string name="contacto_email2">alexnava1409@gmail.com</string>
+    <string name="contacto_cloudteam">CloudBlackBox Developers</string>
+
+
+    <!-- Gasolina -->
+    <string name="gasolina_Nombre">Gasolina</string>
+    <string name="gasolina_btnSemanal">Semanal</string>
+    <string name="gasolina_btnMensual">Mensual</string>
+
+
+    <!-- Bluetooth -->
+    <string name="bt_emparejados">Dispositivos empajerados</string>
+    <string name="bt_disponibles">Dispositivos disponibles</string>
+    <string name="bt_Nombre">Emparejar dispositivo</string>
+    <string name="bt_escanear">Escanear</string>
+    <string name="todo">TODO</string>
+</resources>

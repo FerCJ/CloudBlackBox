@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "734252969081",
+    "project_id": "cloudblackbox-42c3f",
+    "storage_bucket": "cloudblackbox-42c3f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:734252969081:android:0ee8002df4c8065697f8a8",
+        "android_client_info": {
+          "package_name": "com.cjf.cloudblackbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "734252969081-6cr5f8au2noopvk1c6pm9fuklg0bbrr7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcr6ljD-PKhz8KvJHXipwZigeTpVJgJvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "734252969081-6cr5f8au2noopvk1c6pm9fuklg0bbrr7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

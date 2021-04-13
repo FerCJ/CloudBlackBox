@@ -1,0 +1,24 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=EE:DF:01:31:DE:B1:66:49:B9:54:1D:12:44:45:89:18:29:56:5E:67%3Bcom.cjf.cloudblackbox
+
+    You can also add your credentials to an existing key, using these values:
+
+    Package name:
+    com.cjf.cloudblackbox
+
+    SHA-1 certificate fingerprint:
+    EE:DF:01:31:DE:B1:66:49:B9:54:1D:12:44:45:89:18:29:56:5E:67
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyB8Nn-VbQXWuQtxQ7RJPzEdxS5kse_T7GQ</string>
+</resources>
