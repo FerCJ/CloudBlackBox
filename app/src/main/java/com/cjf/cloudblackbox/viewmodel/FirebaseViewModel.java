@@ -44,8 +44,8 @@ public class FirebaseViewModel extends AndroidViewModel {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
-    public void IniciarSesion(String Correo, String Contraseña){
-        repositorioAPP.IniciarSesion(Correo,Contraseña);
+    public void IniciarSesion(String Correo, String Contraseña,String Token){
+        repositorioAPP.IniciarSesion(Correo,Contraseña,Token);
     }
 
     public MutableLiveData<String> getUserlogin() { return Userlogin; }

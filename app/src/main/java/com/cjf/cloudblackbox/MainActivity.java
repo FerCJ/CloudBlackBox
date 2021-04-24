@@ -34,6 +34,7 @@ import org.w3c.dom.Text;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener
 {
 
+    String Token;
     TextView Registrarse,RecuperarPass;
     Button IniciarSesion;
     EditText Correo,Contraseña;
@@ -55,6 +56,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         IniciarSesion.setOnClickListener(this);
         RecuperarPass.setOnClickListener(this);
 
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("Error en obtenerToken: ", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        Token = task.getResult();
+
+
+
+                    }
+                });
+
         firebaseViewModel= ViewModelProviders.of(this).get(FirebaseViewModel.class);
         firebaseViewModel.getUserlogin().observe(this, new Observer<String>() {
             @Override
@@ -63,25 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     progressBar.setVisibility(View.GONE);
                     //Toast.makeText(getBaseContext(),s,Toast.LENGTH_SHORT).show();
                     String Token;
-                    FirebaseMessaging.getInstance().getToken()
-                            .addOnCompleteListener(new OnCompleteListener<String>() {
-                                @Override
-                                public void onComplete(@NonNull Task<String> task) {
-                                    if (!task.isSuccessful()) {
-                                        Log.w("Error en obtenerToken: ", "Fetching FCM registration token failed", task.getException());
-                                        return;
-                                    }
 
-                                    // Get new FCM registration token
-                                    String token = task.getResult();
-
-                                    // Log and toast
-                                    //Log.d("Token registrado: ", token);
-                                    enviarTokenRegistro(token);
-
-
-                                }
-                            });
 
                     Intent intent=new Intent(getBaseContext(), MenuPrincipal.class);
                     intent.putExtra("ID",s);
@@ -121,14 +122,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else{
             progressBar.setVisibility(View.VISIBLE);
-            firebaseViewModel.IniciarSesion(Correo.getText().toString(),Contraseña.getText().toString());
+            firebaseViewModel.IniciarSesion(Correo.getText().toString(),Contraseña.getText().toString(),Token);
         }
     }
 
-    private void enviarTokenRegistro(String Token)
+  /*  private void enviarTokenRegistro(String Token)
     {
         Log.d("token enviado", "El token es: " + Token);
-    }
+    }*/
 
 
 

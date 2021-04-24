@@ -49,7 +49,7 @@ public class RepositorioAPP {
    private Map<String, Object> user = new HashMap<>();
    private Map<String,Object> numerosTel= new HashMap<>();
    private ArrayList<String> ListVideos= new ArrayList<>();
-   private String nombreVideo;
+   private String nombreVideo,IDuser,IDdocument;
    private File localfile;
 
     public RepositorioAPP(Application application){
@@ -71,6 +71,7 @@ public class RepositorioAPP {
         user.put("Nombre", Nombre);
         user.put("Correo", Correo);
         user.put("Contraseña", Contraseña);
+        user.put("Token","");
 
 
         numerosTel.put("UserId",Numero1);
@@ -120,17 +121,31 @@ public class RepositorioAPP {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
-    public void IniciarSesion(String Correo, String Contraseña){
+    public void IniciarSesion(String Correo, String Contraseña, final String Token){
+
         firebaseFirestore.collection("Usuarios")
                 .whereEqualTo("Correo",Correo)
                 .whereEqualTo("Contraseña",Contraseña)
                 .get().addOnCompleteListener(application.getMainExecutor(), new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+
                 if(task.isSuccessful()){
                     if(!task.getResult().isEmpty()) {
-                        for (QueryDocumentSnapshot document : task.getResult())
-                            Userlogin.postValue(document.get("Id").toString());
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            IDuser=document.get("Id").toString();
+                            IDdocument=document.getId().toString();
+                        }
+
+                        firebaseFirestore.collection("Usuarios").document(IDdocument).update("Token",Token).addOnCompleteListener(application.getMainExecutor(), new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    Userlogin.postValue(IDuser);
+                                }
+                            }
+                        });
                     }
                     else
                         Userlogin.postValue("");
@@ -218,15 +233,14 @@ public class RepositorioAPP {
     public MutableLiveData<Uri> getVideoSeleccionado() { return VideoSeleccionado; }
 
     //AGREGAR ESTO INICIO
-    public void ObtenerUbicacion(String UserID, MutableLiveData<ArrayList<String>> Ubicacion){
-        ubicacionN = Ubicacion;
-
-
+    public void ObtenerUbicacion(String UserID, final MutableLiveData<ArrayList<String>> Ubicacion){
 
         DocumentReference docRef= firebaseFirestore.collection("Ubicacion").document(UserID);
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                ArrayList<String> UbicacionReal=new ArrayList<>();
+
                 if (error != null) {
                     Log.w("Ubicacion", "Listen failed.", error);
                     return;
@@ -237,7 +251,7 @@ public class RepositorioAPP {
                     UbicacionReal.add(value.get("Latitud").toString());
                     UbicacionReal.add(value.get("Longitud").toString());
                     /// Ubicacion.postValue(null);
-                    ubicacionN.postValue(UbicacionReal);
+                    Ubicacion.postValue(UbicacionReal);
 
                 } else {
                     Log.d("Ubicacion", "Current data: null");

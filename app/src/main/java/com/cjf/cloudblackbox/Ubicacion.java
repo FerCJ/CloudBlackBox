@@ -61,30 +61,27 @@ public class Ubicacion extends AppCompatActivity implements OnMapReadyCallback {
         UserID=getIntent().getExtras().get("ID").toString();
         firebaseViewModel.getUbicacion(UserID);
         firebaseViewModel.UbicacionNew.observe(this, new Observer<ArrayList<String>>() {
-            @Override
-            public void onChanged(ArrayList<String> strings) {
-                Log.d("MAP","PROBANDO VARIABLE "+firebaseViewModel.UbicacionNew.getValue());
-                Latitud=Float.parseFloat(strings.get(strings.size()-2));
-                Longitud=Float.parseFloat(strings.get(strings.size()-1));
+                    @Override
+                    public void onChanged(ArrayList<String> strings) {
+                        Log.d("MAP", "PROBANDO VARIABLE " + firebaseViewModel.UbicacionNew.getValue());
+                        Latitud=Float.parseFloat(strings.get(strings.size()-2));
+                        Longitud=Float.parseFloat(strings.get(strings.size()-1));
 
 
 
-                Log.d("Map","cambio Latitud"+Latitud);
-                Log.d("Map","cambio Longitud"+Longitud);
+                        Log.d("Map","cambio Latitud"+Latitud);
+                        Log.d("Map","cambio Longitud"+Longitud);
 
-                if (marker !=null)
-                    marker.remove();
+                        if (marker !=null)
+                            marker.remove();
 
 
-                LatLng newLocation=new LatLng(Latitud,Longitud);
-                marker=mMap.addMarker(new MarkerOptions().position(newLocation).title("hola"));
+                        LatLng newLocation=new LatLng(Latitud,Longitud);
+                        marker=mMap.addMarker(new MarkerOptions().position(newLocation).title("hola"));
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation,15));
-            }
-        });
-
-        //AGREGAR ESTO FINAL
-
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation,15));
+                    }
+                });
 
     }
 
