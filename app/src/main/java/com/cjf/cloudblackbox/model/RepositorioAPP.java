@@ -40,8 +40,10 @@ public class RepositorioAPP {
     private FirebaseFirestore firebaseFirestore;
     private FirebaseStorage firebaseStorage;
     private MutableLiveData<Uri> VideoSeleccionado;
+    private MutableLiveData<Uri> TrayectoriaSeleccionada;
     private MutableLiveData<String> ValidarUsuario;
     private MutableLiveData<Boolean> ContraseñaCambiada;
+    private MutableLiveData<ArrayList<String>> Trayectorias;
     private static final String TAG2 = "Repositorio";
     private ArrayList<String> UbicacionReal=new ArrayList<>();
     private MutableLiveData<ArrayList<String>> ubicacionN= new MutableLiveData<>();
@@ -49,7 +51,8 @@ public class RepositorioAPP {
    private Map<String, Object> user = new HashMap<>();
    private Map<String,Object> numerosTel= new HashMap<>();
    private ArrayList<String> ListVideos= new ArrayList<>();
-   private String nombreVideo,IDuser,IDdocument;
+   private ArrayList<String> ListaTrayectorias = new ArrayList<>();
+   private String nombreVideo,IDuser,IDdocument,nombreTrayectoria;
    private File localfile;
 
     public RepositorioAPP(Application application){
@@ -60,8 +63,10 @@ public class RepositorioAPP {
         Userlogin=new MutableLiveData<>();
         Videos=new MutableLiveData<>();
         VideoSeleccionado=new MutableLiveData<>();
+        TrayectoriaSeleccionada=new MutableLiveData<>();
         ValidarUsuario=new MutableLiveData<>();
         ContraseñaCambiada= new MutableLiveData<>();
+        Trayectorias = new MutableLiveData<>();
 
     }
 
@@ -305,4 +310,76 @@ public class RepositorioAPP {
 
     public MutableLiveData<Boolean> getContraseñaCambiada(){return ContraseñaCambiada; }
     //FINAL
+
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public void ObtenerTrayectorias(String UserID){
+
+
+        firebaseFirestore.collection("Trayectorias").whereEqualTo("UserId",UserID).get().addOnCompleteListener(application.getMainExecutor(), new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document: task.getResult())
+                        ListaTrayectorias.add(document.get("Fecha").toString());
+
+                    Trayectorias.postValue(ListaTrayectorias);
+
+                }
+                else{
+                    Trayectorias.postValue(null);
+                }
+            }
+        });
+    }
+
+    public MutableLiveData<ArrayList<String>> getTrayectorias(){ return Trayectorias;}
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public void ObtenerTrayectoriaSeleccionada(String UserID, String Fecha) {
+        nombreTrayectoria = Fecha;
+
+        firebaseFirestore.collection("Trayectorias")
+                .whereEqualTo("UserId", UserID)
+                .whereEqualTo("Fecha", Fecha)
+                .get().addOnCompleteListener(application.getMainExecutor(), new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                String LinkTrayectoria = "";
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult())
+                        LinkTrayectoria = document.get("Link").toString();
+
+
+                    StorageReference VidReference = firebaseStorage.getReferenceFromUrl(LinkTrayectoria);
+                    try {
+                        localfile = File.createTempFile(nombreTrayectoria, ".txt");
+
+                        Log.d("Nombre archivo",localfile.getName());
+                        VidReference.getFile(localfile).addOnCompleteListener(application.getMainExecutor(), new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    TrayectoriaSeleccionada.postValue(Uri.fromFile(localfile));
+                                } else
+                                    TrayectoriaSeleccionada.postValue(null);
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    TrayectoriaSeleccionada.postValue(null);
+                }
+
+            }
+        });
+    }
+
+    public MutableLiveData<Uri> getTrayectoriaSeleccionada() { return TrayectoriaSeleccionada; }
+
+
 }

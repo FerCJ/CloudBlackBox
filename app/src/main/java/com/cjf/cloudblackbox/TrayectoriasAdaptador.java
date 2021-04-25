@@ -10,29 +10,46 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class TrayectoriasAdaptador extends RecyclerView.Adapter<TrayectoriasAdaptador.TrayectoriasViewHolder>{
+public class TrayectoriasAdaptador extends RecyclerView.Adapter<TrayectoriasAdaptador.ViewHolder> implements View.OnClickListener {
 
-    ArrayList<Trayectoria> trayectorias;
+    List<Trayectoria> trayectorias;
+    private  View.OnClickListener listener;
 
-    public TrayectoriasAdaptador(ArrayList<Trayectoria> trayectorias)
+
+    public TrayectoriasAdaptador(List<Trayectoria> trayectorias)
     {
         this.trayectorias = trayectorias;
     }
 
-    public TrayectoriasAdaptador.TrayectoriasViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.trayectorias_cardview,parent,false);
+        ViewHolder viewHolder = new ViewHolder(v);
+        v.setOnClickListener(this);
+        return viewHolder;
 
-        return new TrayectoriasAdaptador.TrayectoriasViewHolder(v);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull TrayectoriasAdaptador.TrayectoriasViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Trayectoria trayectoria = trayectorias.get(position);
 
         holder.imgTrayectoria.setImageResource(R.drawable.trayectoriasicon);
         holder.tvFecha.setText(trayectoria.getFecha());
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder
+    {
+        private ImageView imgTrayectoria;
+        private TextView tvFecha;
+
+        public ViewHolder (View itemView)
+        {
+            super(itemView);
+            imgTrayectoria = (ImageView) itemView.findViewById(R.id.imgTrayectorias);
+            tvFecha = (TextView) itemView.findViewById(R.id.tvFechaT);
+        }
     }
 
 
@@ -46,16 +63,17 @@ public class TrayectoriasAdaptador extends RecyclerView.Adapter<TrayectoriasAdap
         return super.getItemId(position);
     }
 
-    public static class TrayectoriasViewHolder extends RecyclerView.ViewHolder
-    {
-        private ImageView imgTrayectoria;
-        private TextView tvFecha;
 
-        public TrayectoriasViewHolder (View itemView)
+    public  void  setOnClickListener(View.OnClickListener listener)
+    {
+        this.listener = listener;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (listener != null)
         {
-            super(itemView);
-            imgTrayectoria = (ImageView) itemView.findViewById(R.id.imgTrayectorias);
-            tvFecha = (TextView) itemView.findViewById(R.id.tvFechaT);
+            listener.onClick(view);
         }
     }
 }
