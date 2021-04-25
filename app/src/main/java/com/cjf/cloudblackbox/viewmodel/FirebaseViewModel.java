@@ -32,6 +32,8 @@ public class FirebaseViewModel extends AndroidViewModel {
         Userlogin= repositorioAPP.getUserlogin();
         Videos= repositorioAPP.getVideos();
         VideoSeleccionado=repositorioAPP.getVideoSeleccionado();
+        ValidarUsuario=repositorioAPP.getValidarUsuario();
+        ContraseñaCambiada=repositorioAPP.getContraseñaCambiada();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)

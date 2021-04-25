@@ -60,6 +60,8 @@ public class RepositorioAPP {
         Userlogin=new MutableLiveData<>();
         Videos=new MutableLiveData<>();
         VideoSeleccionado=new MutableLiveData<>();
+        ValidarUsuario=new MutableLiveData<>();
+        ContraseñaCambiada= new MutableLiveData<>();
 
     }
 

@@ -90,16 +90,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        RecuperarPass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(getBaseContext(),RecuperarPassword.class);
-                startActivity(intent);
-
-            }
-        });
-
-
     }
 
     @Override
@@ -114,6 +104,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if(v.getId()==R.id.tvRegistrarse){
             Intent intent=new Intent(this,Registro.class);
+            startActivity(intent);
+        }
+        if(v.getId()==R.id.tvRecuperar){
+            Intent intent=new Intent(this,RecuperarPassword.class);
             startActivity(intent);
         }
         else{
