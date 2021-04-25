@@ -80,10 +80,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onChanged(String s) {
                 if(!s.equals("")){
                     progressBar.setVisibility(View.GONE);
-                    //Toast.makeText(getBaseContext(),s,Toast.LENGTH_SHORT).show();
-                    String Token;
-
-
                     Intent intent=new Intent(getBaseContext(), MenuPrincipal.class);
                     intent.putExtra("ID",s);
                     startActivity(intent);
