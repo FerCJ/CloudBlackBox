@@ -38,7 +38,7 @@ public class ListaDispositivos extends AppCompatActivity {
 
         inicializar();
 
-        Button closeButton = (Button) findViewById(R.id.btnReturnVideo);
+        Button closeButton = (Button) findViewById(R.id.btnReturnBT);
         closeButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
