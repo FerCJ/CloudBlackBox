@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -40,7 +41,8 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
 
     private RecyclerView listaTrayectorias;
     private MapView mapa;
-    private  ArrayList<String> coordenadasLista = new ArrayList<>();
+    private GoogleMap rutas;
+    Polyline polyline1;
 
     private List<Trayectoria> trayectorias = new ArrayList<>();
     private FirebaseViewModel firebaseViewModel;
@@ -50,6 +52,10 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
     private static final String TAG2 = "VerTrayectoria";
     private String FILE_NAME = "";
 
+    private int nTrayectorias = 0;
+    //private  ArrayList<Coordenadas> coordenadasLista = new ArrayList<>();
+    private List<LatLng> coordenadasLista = new ArrayList<>();
+    private String linea;
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +66,6 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
         progressBar = (ProgressBar) findViewById((R.id.progressBarTrayectorias));
         listaTrayectorias = (RecyclerView) findViewById(R.id.rvListaTrayectorias);
         mapa = (MapView) findViewById(R.id.mvTrayectorias);
-        Log.d("Crash solictar:","Antes de solicitar");
-
 
 
         firebaseViewModel = ViewModelProviders.of(this).get(FirebaseViewModel.class);
@@ -97,16 +101,14 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        firebaseViewModel.getTrayectoriaSeleccionada().observe(this, new Observer<Uri>() {
+        firebaseViewModel.getTrayectoriaSeleccionada().observe(this, new Observer<String>() {
             @Override
-            public void onChanged(Uri uri) {
-                if (uri != null)
-                {
-                    Log.i(TAG2, "Si entra a reproducir el video" );
-                    Log.i(TAG2, "El link recibido es:  " + uri.toString() );
-                    FILE_NAME = uri.toString();
-                    leeArchivo();
-                }
+            public void onChanged(String s) {
+                Log.i(TAG2, "Si entra a reproducir el video" );
+                Log.i(TAG2, "El path recibido es:  " + s );
+                FILE_NAME = s;
+                leeArchivo();
+
             }
         });
 
@@ -134,32 +136,29 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap mapa) {
+        rutas = mapa;
 
-        /*// Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(19.457558810020842, -99.20795649290088);
-        mapa.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        float zoomLevel = 16.0f; //This goes up to 21
-        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomLevel));*/
+        // Add a marker in Sydney and move the camera
+        LatLng sydney = new LatLng(19.4302681,-99.134059);
+        float zoomLevel = 12.0f; //This goes up to 21
+        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomLevel));
+
+        polyline1 = rutas.addPolyline(new PolylineOptions()
+                .clickable(true));
+
+
+        if (coordenadasLista.size() > 0)
+        {
+            for (LatLng coordenada: coordenadasLista)
+            {
+                Polyline polyline1 = mapa.addPolyline(new PolylineOptions()
+                        .add(coordenada));
+            }
+        }
 
 
 
-        Polyline polyline1 = mapa.addPolyline(new PolylineOptions()
-                .clickable(true)
-                .add(
-                        new LatLng(-35.016, 143.321),
-                        new LatLng(-34.747, 145.592),
-                        new LatLng(-34.364, 147.891),
-                        new LatLng(-33.501, 150.217),
-                        new LatLng(-32.306, 149.248),
-                        new LatLng(-32.491, 147.309)));
 
-                mapa.addPolyline(new PolylineOptions()
-                .clickable(true)
-                .add(new LatLng(-32.491, 147.309)));
-
-        // Position the map's camera near Alice Springs in the center of Australia,
-        // and set the zoom factor so most of Australia shows on the screen.
-        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-23.684, 133.903), 4));
 
        /* // Set listeners for click events.
         mapa.setOnPolylineClickListener(this);
@@ -197,120 +196,121 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
         mapa.onSaveInstanceState(outState);
     }
 
-    private void crearArchivo()
-    {
-
-        ArrayList<String> instrucciones = new ArrayList<>();
-        instrucciones.add("Start");
-        instrucciones.add("-35.016,143.321");
-        instrucciones.add("-34.747,145.592");
-        instrucciones.add("-34.364,147.891");
-        instrucciones.add("-33.501,150.217");
-        instrucciones.add("-32.306,149.248");
-        instrucciones.add("-32.491,147.309");
-        instrucciones.add("End");
-
-
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = openFileOutput(FILE_NAME,MODE_PRIVATE);
-            for (int i = 0; i < 8; i++)
-            {
-                fileOutputStream.write(instrucciones.get(i).getBytes());
-                Log.d("Guardar:","Archivo guardado en: " + getFilesDir() + "/" + FILE_NAME);
-            }
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }finally {
-            if (fileOutputStream != null)
-            {
-                try {
-                    fileOutputStream.close();
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     public void leeArchivo()
     {
         Log.d("LeerArchivo: ", "Entra al metodo");
-        FileReader fileReader = null;
-        BufferedReader bufferedReader;
-        String buffer;
+        File archivo = null;
+        FileReader fr = null;
+        BufferedReader br = null;
         StringBuilder stringBuilder = new StringBuilder();
 
-
-
-       // FileInputStream fileInputStream = null;
-        //String lineaTexto;
-        //StringBuilder stringBuilder = new StringBuilder();
         try {
-            fileReader = new FileReader(FILE_NAME);
-            bufferedReader = new BufferedReader(fileReader);
-            //fileInputStream = openFileInput(FILE_NAME);
+            // Apertura del fichero y creacion de BufferedReader para poder
+            // hacer una lectura comoda (disponer del metodo readLine()).
+            archivo = new File (FILE_NAME);
+            fr = new FileReader (archivo);
+            br = new BufferedReader(fr);
 
-            while ((buffer = bufferedReader.readLine()) != null) {
-                stringBuilder.append(buffer);
-            }
-            /*InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            // Lectura del fichero
 
-            while ((lineaTexto = bufferedReader.readLine())  != null)
-            {
-                stringBuilder.append(lineaTexto);
-                Log.d("LeerArchivo: ", "Se queda en el while");
-            }*/
-            Log.d("LeerArchivo: ", stringBuilder.toString());
-        }catch (Exception e)
+            while((linea=br.readLine())!=null)
+                stringBuilder.append(linea).append("");
+            System.out.println(linea);
+        }
+        catch(Exception e)
         {
-            Log.d("LeerArchivo: ", "Error leyendo archivo");
+            e.printStackTrace();
         }
-        finally {
-            if (fileReader != null)
-            {
-                try {
-                    fileReader.close();
-                   // obtenerCoordenadas(stringBuilder.toString());
-                }
-                catch (Exception e)
+        finally
+        {
+
+
+            // En el finally cerramos el fichero, para asegurarnos
+            // que se cierra tanto si todo va bien como si salta
+            // una excepcion.
+            try{
+                if( null != fr )
                 {
+                    fr.close();
 
                 }
-
+            }
+            catch (Exception e2)
+            {
+                e2.printStackTrace();
             }
         }
+
+        if(stringBuilder != null)
+        {
+            obtenerCoordenadas(stringBuilder.toString());
+        }
+        else
+        {
+            System.out.println("No se encontraron trayectorias en el archivo");
+        }
+
     }
 
-    public void obtenerCoordenadas(String coordenadas)
+    public void obtenerCoordenadas(String trayectorias)
     {
-        int startInd, stopInd, aux1, aux2;
-        startInd = coordenadas.indexOf("Start");
-        stopInd = 0;
+
+        int startTrayecto, stopTrayecto,startCoor, stopCoor, aux1, aux2, aux3;
+        startTrayecto = trayectorias.indexOf("#");
+
         aux1 = 0;
-        aux2 = 0;
+        String trayecto = "";
+        System.out.println(trayectorias);
+        aux1 = trayectorias.indexOf("#",startTrayecto+1);
 
-        while(stopInd != -1)
+        while(aux1 != -1)
         {
-            if (startInd < 0)
+            coordenadasLista.clear();
+            trayecto = trayectorias.substring(startTrayecto+1,aux1);
+
+            startCoor = trayecto.indexOf("@");
+            aux2 = 0;
+            String coordenada = "";
+            aux2 = trayecto.indexOf("@",startCoor+1);
+
+            while(aux2 != -1)
             {
-                stopInd = -1;
+                coordenada = trayecto.substring(startCoor+1,aux2);
+
+                aux3 = coordenada.indexOf("/");
+
+                coordenadasLista.add(new LatLng(Double.parseDouble(coordenada.substring(0,aux3)),Double.parseDouble(coordenada.substring(aux3+1,coordenada.length()))));
+                startCoor = trayecto.indexOf("@",aux2-1);
+                aux2 = trayecto.indexOf("@",startCoor+1);
             }
-            else
-            {
-                stopInd = coordenadas.indexOf("End",startInd);
-                coordenadasLista.add(coordenadas.substring(startInd+5,stopInd-1));
-        }
+            float zoomlevel = 16.0f;
+            LatLng sydney = coordenadasLista.get(0);
+            rutas.addMarker(new MarkerOptions().position(sydney).title("Inicio"));
+            rutas.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomlevel));
+
+
+
+           /* Polyline polyline2 = rutas.addPolyline(new PolylineOptions()
+                    .clickable(true)
+                    .add(
+                            new LatLng(19.457271,-99.20797),
+                            new LatLng(19.457547,-99.207848)));*/
+            polyline1.setPoints(coordenadasLista);
+            sydney = coordenadasLista.get(coordenadasLista.size()-1);
+            rutas.addMarker(new MarkerOptions().position(sydney).title("Fin"));
+            System.out.println("");
+            System.out.println("Fin trayecto.........");
+            System.out.println("");
+            startTrayecto = trayectorias.indexOf("#",aux1-1);
+            aux1 = trayectorias.indexOf("#",startTrayecto+1);
         }
 
-        for (String coordenada : coordenadasLista)
-        {
-            Log.d("CorrdenadasObtenidas: ", coordenada);
-        }
+    }
+
+    public void  dibujarTrayectorias()
+    {
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)

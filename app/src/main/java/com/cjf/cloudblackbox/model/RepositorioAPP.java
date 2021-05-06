@@ -9,7 +9,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,7 +39,7 @@ public class RepositorioAPP {
     private FirebaseFirestore firebaseFirestore;
     private FirebaseStorage firebaseStorage;
     private MutableLiveData<Uri> VideoSeleccionado;
-    private MutableLiveData<Uri> TrayectoriaSeleccionada;
+    private MutableLiveData<String> TrayectoriaSeleccionada;
     private MutableLiveData<String> ValidarUsuario;
     private MutableLiveData<Boolean> ContraseñaCambiada;
     private MutableLiveData<ArrayList<String>> Trayectorias;
@@ -63,7 +62,7 @@ public class RepositorioAPP {
         Userlogin=new MutableLiveData<>();
         Videos=new MutableLiveData<>();
         VideoSeleccionado=new MutableLiveData<>();
-        TrayectoriaSeleccionada=new MutableLiveData<>();
+        TrayectoriaSeleccionada=new MutableLiveData<String>();
         ValidarUsuario=new MutableLiveData<>();
         ContraseñaCambiada= new MutableLiveData<>();
         Trayectorias = new MutableLiveData<>();
@@ -353,16 +352,18 @@ public class RepositorioAPP {
                         LinkTrayectoria = document.get("Link").toString();
 
 
-                    StorageReference VidReference = firebaseStorage.getReferenceFromUrl(LinkTrayectoria);
+                    StorageReference TrayectReference = firebaseStorage.getReferenceFromUrl(LinkTrayectoria);
                     try {
                         localfile = File.createTempFile(nombreTrayectoria, ".txt");
 
                         Log.d("Nombre archivo",localfile.getName());
-                        VidReference.getFile(localfile).addOnCompleteListener(application.getMainExecutor(), new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+                        Log.d("Ruta absoluta",localfile.getAbsolutePath());
+                        Log.d("Ruta",localfile.getPath());
+                        TrayectReference.getFile(localfile).addOnCompleteListener(application.getMainExecutor(), new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
                                 if (task.isSuccessful()) {
-                                    TrayectoriaSeleccionada.postValue(Uri.fromFile(localfile));
+                                    TrayectoriaSeleccionada.postValue(localfile.getPath());
                                 } else
                                     TrayectoriaSeleccionada.postValue(null);
                             }
@@ -379,7 +380,7 @@ public class RepositorioAPP {
         });
     }
 
-    public MutableLiveData<Uri> getTrayectoriaSeleccionada() { return TrayectoriaSeleccionada; }
+    public MutableLiveData<String> getTrayectoriaSeleccionada() { return TrayectoriaSeleccionada; }
 
 
 }

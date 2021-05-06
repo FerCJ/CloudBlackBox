@@ -3,7 +3,6 @@ package com.cjf.cloudblackbox.viewmodel;
 import android.app.Application;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -21,7 +20,7 @@ public class FirebaseViewModel extends AndroidViewModel {
     private MutableLiveData<ArrayList<String>> Videos;
     private MutableLiveData<ArrayList<String>> Trayectorias;
     private MutableLiveData<Uri> VideoSeleccionado;
-    private MutableLiveData<Uri> TrayectoriaSeleccionada;
+    private MutableLiveData<String> TrayectoriaSeleccionada;
     private MutableLiveData<String> ValidarUsuario;
     private  MutableLiveData<Boolean> ContraseñaCambiada;
     private MutableLiveData<ArrayList<String>> Ubicacion= new MutableLiveData<>();
@@ -95,5 +94,5 @@ public class FirebaseViewModel extends AndroidViewModel {
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void ObtenerTrayectoriaSeleccionada(String UserID, String NombreTrayectoria){repositorioAPP.ObtenerTrayectoriaSeleccionada(UserID,NombreTrayectoria);}
 
-    public MutableLiveData<Uri> getTrayectoriaSeleccionada(){return TrayectoriaSeleccionada;}
+    public MutableLiveData<String> getTrayectoriaSeleccionada(){return TrayectoriaSeleccionada;}
 }
