@@ -12,93 +12,71 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.UUID;
 
-public class SeleccionarModo extends AppCompatActivity {
+public class SeleccionarModo extends AppCompatActivity implements onOpcionListener {
 
     private ArrayList<Modos> modos;
     private RecyclerView listaModos;
-    private BluetoothAdapter bluetoothAdapter;
-    private Context context;
-    private BTUtils btUtils;
 
-    private final int LOCATION_PERMISSION_REQUEST = 101;
-    private final int SELECT_DEVICE = 102;
+    // Declarar las variables que se utilizaran
+    BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    //BluetoothSocket mmSocket;
+    BluetoothDevice mmDevice = null;
+    BluetoothService mmBluetoothService = null;
 
-    public static final int MESSAGE_STATE_CHANGED = 0;
-    public static final int MESSAGE_READ = 1;
-    public static final int MESSAGE_WRITE = 2;
-    public static final int MESSAGE_DEVICE_NAME = 3;
-    public static final int MESSAGE_TOAST = 4;
+    //"Manejador" que ayuda a controlar todos los mensajes enviados por el BT
+    private Handler mHandler= new MyHandler(this);
 
-    public static final String DEVICE_NAME = "deviceName";
-    public static final String TOAST = "toast";
-    private String connectedDevice;
-
-
-    private Handler handler = new Handler(new Handler.Callback() {
+    private class MyHandler extends Handler{
+        //crea un contexto para la clase de la cual se recibiran los mensajes
+        private WeakReference<SeleccionarModo> mActivity;
+        //Constructo de la clase, obtiene como parametro la actividad
+        public MyHandler(SeleccionarModo activity) {
+            mActivity = new WeakReference<SeleccionarModo>(activity);
+            //context=activity.getApplicationContext();
+        }
+        //SE soobreescribe el metodo para manejar los mensajes, que hacer en caso de que llegue un mensaje nuevo
         @Override
-        public boolean handleMessage(@NonNull Message message) {
+        public void handleMessage(Message msg) {
 
-            switch (message.what)
-            {
-                case MESSAGE_STATE_CHANGED:
-                    switch (message.arg1)
-                    {
-                        case BTUtils.STATE_NONE:
-                            btUtils.setState(0);
-                            break;
-                        case BTUtils.STATE_LISTEN:
-                            btUtils.setState(1);
-                            break;
-                        case BTUtils.STATE_CONNECTING:
-                            btUtils.setState(2);
-                            break;
-                        case BTUtils.STATE_CONNECTED:
-                            btUtils.setState(3);
-                             break;
-                        default:
-                            break;
-                    }
-                    break;
-
-                case MESSAGE_READ:
-                    break;
-                case MESSAGE_WRITE:
-                    break;
-                case MESSAGE_DEVICE_NAME:
-                    connectedDevice = message.getData().getString(DEVICE_NAME);
-                    Toast.makeText(context, connectedDevice,Toast.LENGTH_SHORT).show();
-                    break;
-                case MESSAGE_TOAST:
-                    Toast.makeText(context, message.getData().getString(TOAST),Toast.LENGTH_SHORT).show();
-                    break;
-                default:
+            byte[] buffer = (byte[]) msg.obj;
+            switch (msg.what){
+                case 1:
+                    String MensajeCPU=new String(buffer,0,msg.arg1);
+                    Toast.makeText(SeleccionarModo.this, "El Bluetooth ya esta encendido", Toast.LENGTH_LONG).show();
                     break;
             }
-
-            return false;
         }
-    });
+    }
+
+    int REQUEST_ENABLE_BL = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seleccionar_modo);
-        context = this;
+        EncenderBlue();
 
         modos = new ArrayList<Modos>();
         modos.add(new Modos("Modo Trayecto",R.drawable.trayectoicon));
@@ -108,7 +86,7 @@ public class SeleccionarModo extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         listaModos.setLayoutManager(llm);
-        SeleccionarModoAdaptador adaptador = new SeleccionarModoAdaptador(modos);
+        SeleccionarModoAdaptador adaptador = new SeleccionarModoAdaptador(modos,this);
         listaModos.setAdapter(adaptador);
 
         Button closeButton = (Button) findViewById(R.id.btnReturn);
@@ -124,128 +102,103 @@ public class SeleccionarModo extends AppCompatActivity {
             }
         });
 
-        inicialziarBT();
-
-        btUtils = new BTUtils(context, handler);
-
         Button bluetooth = (Button) findViewById(R.id.btnConectarBT);
+
         bluetooth.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                //Metodo para confirmar que la app ya esta emparejada con la Raspberry
+                ObtenerDatosRaspBerry();
+                // Verifica los persimos si la version de android es mayor a la loolilop y si no los tiene los pide
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        System.out.println("Entro al if");
 
-               encenderBT();
-               revisarPermisos();
+
+                    } else {
+                        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE))
+                            Toast.makeText(getBaseContext(), "Necesitamos agregar permisos de lectura", Toast.LENGTH_SHORT).show();
+
+                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
+
+
+                    }
+                }
+
+                //STring que indica el protocolo de comunicacion y el tipo dispositivo a conectar
+                UUID uuid=UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");
+
+                //SE intenta establecer la conexion con la Raspberry
+                mmBluetoothService=new BluetoothService(SeleccionarModo.this,mmDevice,uuid, mHandler);
+                Toast.makeText(SeleccionarModo.this, "Conexion exitosa BT", Toast.LENGTH_SHORT) .show();
+
+
 
             }
         });
 
-        btUtils = new BTUtils(context,handler);
+
     }
-
-    private void inicialziarBT()
-    {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        if (bluetoothAdapter == null)
-        {
-            /*Snackbar.make(view, "Click detectado", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();*/
-            Toast.makeText(context, "Bluetooth no encontrado",Toast.LENGTH_SHORT).show();
+    //Verifica si el BT esta encendido, sino lo enciende
+    private void EncenderBlue() {
+        if (!bluetoothAdapter.isEnabled()) {
+            Intent intentBlEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(intentBlEnable, REQUEST_ENABLE_BL);
+        } else {
+            Toast.makeText(this, "El Bluetooth ya esta encendido", Toast.LENGTH_LONG).show();
         }
     }
 
-    private  void  encenderBT()
-    {
-        if (bluetoothAdapter.isEnabled())
-        {
-            Toast.makeText(context, "Bluetooth ya esta encendido",Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            bluetoothAdapter.enable();
-        }
+    //Metodo que verifica todos los dispositivos emparejados en el smartphone y busca el que llama Raspberry
+    private void ObtenerDatosRaspBerry() {
 
-        if (bluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE)
-        {
-            Intent discoveryIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            discoveryIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,300);
-            startActivity(discoveryIntent);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (btUtils != null)
-        {
-            btUtils.stop();
-        }
-    }
-
-    private void  revisarPermisos()
-    {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
-
-        }
-        else
-        {
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
+        //Obtiene la lista de todos los dispositivos vinculados
+        Set<BluetoothDevice> DispositivosVinculados = bluetoothAdapter.getBondedDevices();
+        //obtener la direccion MAC de la raspberry
+        if (DispositivosVinculados.size() > 0) {
+            for (BluetoothDevice device : DispositivosVinculados) {
+                if (device.getName().equals("raspberrypi")) {
+                    mmDevice = device;
                 }
-            }, 3000);
-            Intent intent = new Intent(this,ListaDispositivos.class);
-            startActivityForResult(intent,SELECT_DEVICE);
+            }
         }
-
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    if (requestCode == SELECT_DEVICE &&  resultCode == RESULT_OK)
-    {
-        String address = data.getStringExtra("deviceAddress");
-        btUtils.connect2(bluetoothAdapter.getRemoteDevice(address));
-    }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+    public void onOpcionClick(int position) {
+        int posicion = position;
+        Toast.makeText(this, "Se selecciono un elemnto", Toast.LENGTH_SHORT) .show();
+        Log.i("MsgBT", "Posicion para el switch: " + posicion);
+        switch (posicion) {
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == LOCATION_PERMISSION_REQUEST)
-        {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-
-            }
-            else
-            {
-                new AlertDialog.Builder(context)
-                        .setCancelable(false)
-                        .setMessage("Otorgar los permisos es requerido")
-                        .setPositiveButton("Permitir", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                revisarPermisos();
-                            }
-                        })
-                        .setNegativeButton("Rechazar", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                SeleccionarModo.this.finish();
-                            }
-                        })
-                        .create();
-            }
+            case 0:
+                Log.i("MsgBT", "Entro a la posicion 0 ");
+                if (mmBluetoothService != null)
+                {
+                    mmBluetoothService.write("Trayecto");
+                }
+                else
+                {
+                    Toast.makeText(this, "No hay conexion BT", Toast.LENGTH_SHORT) .show();
+                }
+                break;
+            case 1:
+                Log.i("MsgBT", "Entro a la posicion 1 ");
+                if (mmBluetoothService != null)
+                {
+                    mmBluetoothService.write("Parking");
+                }
+                else
+                {
+                    Toast.makeText(this, "No hay conexion BT", Toast.LENGTH_SHORT) .show();
+                }
+                break;
+            default:
+                break;
         }
-        else
-        {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-
     }
+
+
+
 }

@@ -19,16 +19,19 @@ import static androidx.core.content.ContextCompat.startActivity;
 public class SeleccionarModoAdaptador extends RecyclerView.Adapter<SeleccionarModoAdaptador.SeleccionarModoViewHolder>
 {
     private ArrayList<Modos> modos;
+    private onOpcionListener mListener;
 
-    public SeleccionarModoAdaptador(ArrayList<Modos> modos)
+
+    public SeleccionarModoAdaptador(ArrayList<Modos> modos, onOpcionListener listener)
     {
         this.modos = modos;
+        this.mListener = listener;
     }
 
     public SeleccionarModoAdaptador.SeleccionarModoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.modos_cardview,parent,false);
 
-        return new SeleccionarModoAdaptador.SeleccionarModoViewHolder(v);
+        return new SeleccionarModoAdaptador.SeleccionarModoViewHolder(v,mListener);
     }
 
     @Override
@@ -50,22 +53,32 @@ public class SeleccionarModoAdaptador extends RecyclerView.Adapter<SeleccionarMo
         return super.getItemId(position);
     }
 
-
-
-
-
-    public static class SeleccionarModoViewHolder extends RecyclerView.ViewHolder
+    public static class SeleccionarModoViewHolder extends RecyclerView.ViewHolder implements onOpcionListener, View.OnClickListener
     {
         private ImageView imgModo;
         private TextView tvModo;
+        onOpcionListener listener;
 
-        public SeleccionarModoViewHolder (View itemView)
+        public SeleccionarModoViewHolder (View itemView, onOpcionListener listener)
         {
             super(itemView);
             imgModo = (ImageView) itemView.findViewById(R.id.imgModo);
             tvModo = (TextView) itemView.findViewById(R.id.tvModo);
+
+            this.listener = listener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onOpcionClick(int position) {
+            listener.onOpcionClick(getAdapterPosition());
+
+        }
+
+        @Override
+        public void onClick(View view) {
+
         }
     }
-
 
 }
