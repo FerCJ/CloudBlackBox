@@ -37,33 +37,37 @@ public class SeleccionarModo extends AppCompatActivity implements onOpcionListen
 
     private ArrayList<Modos> modos;
     private RecyclerView listaModos;
-
-    // Declarar las variables que se utilizaran
+    private Context context;
     BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     //BluetoothSocket mmSocket;
     BluetoothDevice mmDevice = null;
-    BluetoothService mmBluetoothService = null;
+    BluetoothService mmBluetoothService;
 
-    //"Manejador" que ayuda a controlar todos los mensajes enviados por el BT
+
     private Handler mHandler= new MyHandler(this);
 
     private class MyHandler extends Handler{
-        //crea un contexto para la clase de la cual se recibiran los mensajes
         private WeakReference<SeleccionarModo> mActivity;
-        //Constructo de la clase, obtiene como parametro la actividad
         public MyHandler(SeleccionarModo activity) {
             mActivity = new WeakReference<SeleccionarModo>(activity);
             //context=activity.getApplicationContext();
         }
-        //SE soobreescribe el metodo para manejar los mensajes, que hacer en caso de que llegue un mensaje nuevo
         @Override
         public void handleMessage(Message msg) {
-
             byte[] buffer = (byte[]) msg.obj;
             switch (msg.what){
                 case 1:
+                    String Estadodeconexion=new String(buffer,0,msg.arg1);
+                    if(Estadodeconexion.equals("Conexion creada")) {
+                        Toast.makeText(getApplication(), Estadodeconexion, Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(getApplication(), Estadodeconexion, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case 2:
                     String MensajeCPU=new String(buffer,0,msg.arg1);
-                    Toast.makeText(SeleccionarModo.this, "El Bluetooth ya esta encendido", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), MensajeCPU, Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -76,7 +80,7 @@ public class SeleccionarModo extends AppCompatActivity implements onOpcionListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seleccionar_modo);
-        EncenderBlue();
+        context = this;
 
         modos = new ArrayList<Modos>();
         modos.add(new Modos("Modo Trayecto",R.drawable.trayectoicon));
@@ -88,6 +92,9 @@ public class SeleccionarModo extends AppCompatActivity implements onOpcionListen
         listaModos.setLayoutManager(llm);
         SeleccionarModoAdaptador adaptador = new SeleccionarModoAdaptador(modos,this);
         listaModos.setAdapter(adaptador);
+
+        EncenderBlue();
+
 
         Button closeButton = (Button) findViewById(R.id.btnReturn);
         closeButton.setOnClickListener(new View.OnClickListener() {
@@ -108,52 +115,57 @@ public class SeleccionarModo extends AppCompatActivity implements onOpcionListen
 
             @Override
             public void onClick(View v) {
-                //Metodo para confirmar que la app ya esta emparejada con la Raspberry
+
                 ObtenerDatosRaspBerry();
-                // Verifica los persimos si la version de android es mayor a la loolilop y si no los tiene los pide
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                        System.out.println("Entro al if");
-
-
-                    } else {
-                        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE))
-                            Toast.makeText(getBaseContext(), "Necesitamos agregar permisos de lectura", Toast.LENGTH_SHORT).show();
-
-                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
-
-
-                    }
-                }
-
-                //STring que indica el protocolo de comunicacion y el tipo dispositivo a conectar
                 UUID uuid=UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");
 
-                //SE intenta establecer la conexion con la Raspberry
-                mmBluetoothService=new BluetoothService(SeleccionarModo.this,mmDevice,uuid, mHandler);
-                Toast.makeText(SeleccionarModo.this, "Conexion exitosa BT", Toast.LENGTH_SHORT) .show();
-
-
+                mmBluetoothService=new BluetoothService(context,mmDevice,uuid, mHandler);
 
             }
         });
-
-
     }
-    //Verifica si el BT esta encendido, sino lo enciende
+
+    @Override
+    public void onOpcionClick(int position) {
+        int posicion = position;
+
+        switch (posicion) {
+
+            case 0:
+                if (mmBluetoothService != null)
+                {
+                    mmBluetoothService.write("Trayecto");
+                }
+                else
+                {
+                    Toast.makeText(this, "Primero necesita conectarse a la raspberry", Toast.LENGTH_SHORT) .show();
+                }
+                break;
+            case 1:
+                if (mmBluetoothService != null)
+                {
+                    mmBluetoothService.write("Parking");
+                }
+                else
+                {
+                    Toast.makeText(this, "Primero necesita conectarse a la raspberry", Toast.LENGTH_SHORT) .show();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     private void EncenderBlue() {
         if (!bluetoothAdapter.isEnabled()) {
             Intent intentBlEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(intentBlEnable, REQUEST_ENABLE_BL);
         } else {
-            Toast.makeText(this, "El Bluetooth ya esta encendido", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "El Bluetooth ya esta encendido", Toast.LENGTH_LONG).show();
         }
     }
 
-    //Metodo que verifica todos los dispositivos emparejados en el smartphone y busca el que llama Raspberry
     private void ObtenerDatosRaspBerry() {
-
-        //Obtiene la lista de todos los dispositivos vinculados
         Set<BluetoothDevice> DispositivosVinculados = bluetoothAdapter.getBondedDevices();
         //obtener la direccion MAC de la raspberry
         if (DispositivosVinculados.size() > 0) {
@@ -162,40 +174,6 @@ public class SeleccionarModo extends AppCompatActivity implements onOpcionListen
                     mmDevice = device;
                 }
             }
-        }
-    }
-
-    @Override
-    public void onOpcionClick(int position) {
-        int posicion = position;
-        Toast.makeText(this, "Se selecciono un elemnto", Toast.LENGTH_SHORT) .show();
-        Log.i("MsgBT", "Posicion para el switch: " + posicion);
-        switch (posicion) {
-
-            case 0:
-                Log.i("MsgBT", "Entro a la posicion 0 ");
-                if (mmBluetoothService != null)
-                {
-                    mmBluetoothService.write("Trayecto");
-                }
-                else
-                {
-                    Toast.makeText(this, "No hay conexion BT", Toast.LENGTH_SHORT) .show();
-                }
-                break;
-            case 1:
-                Log.i("MsgBT", "Entro a la posicion 1 ");
-                if (mmBluetoothService != null)
-                {
-                    mmBluetoothService.write("Parking");
-                }
-                else
-                {
-                    Toast.makeText(this, "No hay conexion BT", Toast.LENGTH_SHORT) .show();
-                }
-                break;
-            default:
-                break;
         }
     }
 

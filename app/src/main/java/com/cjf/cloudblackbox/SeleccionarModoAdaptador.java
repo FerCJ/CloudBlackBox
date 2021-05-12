@@ -77,7 +77,7 @@ public class SeleccionarModoAdaptador extends RecyclerView.Adapter<SeleccionarMo
 
         @Override
         public void onClick(View view) {
-
+            listener.onOpcionClick(getAdapterPosition());
         }
     }
 
