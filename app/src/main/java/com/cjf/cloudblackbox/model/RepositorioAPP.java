@@ -170,7 +170,6 @@ public class RepositorioAPP {
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void ObtenerVideos(String UserID){
-
         firebaseFirestore.collection("Videos").whereEqualTo("UserId",UserID).get().addOnCompleteListener(application.getMainExecutor(), new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -179,8 +178,6 @@ public class RepositorioAPP {
                         ListVideos.add(document.get("Nombre").toString()+"@"+document.get("Fecha").toString());
 
                     Videos.postValue(ListVideos);
-
-
                 }
                 else{
                     Videos.postValue(null);
@@ -205,8 +202,6 @@ public class RepositorioAPP {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot document: task.getResult())
                         LinkVideo=document.get("Link").toString();
-
-
 
                     StorageReference VidReference= firebaseStorage.getReferenceFromUrl(LinkVideo);
                     try {
@@ -313,19 +308,14 @@ public class RepositorioAPP {
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void ObtenerTrayectorias(String UserID){
-
-
         firebaseFirestore.collection("Trayectorias").whereEqualTo("UserId",UserID).get().addOnCompleteListener(application.getMainExecutor(), new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot document: task.getResult())
                         ListaTrayectorias.add(document.get("Fecha").toString());
 
                     Trayectorias.postValue(ListaTrayectorias);
-
                 }
                 else{
                     Trayectorias.postValue(null);
@@ -384,3 +374,4 @@ public class RepositorioAPP {
 
 
 }
+

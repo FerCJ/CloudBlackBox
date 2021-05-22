@@ -94,4 +94,12 @@
     <string name="bt_Nombre">Emparejar dispositivo</string>
     <string name="bt_escanear">Escanear</string>
     <string name="todo">TODO</string>
+
+    <!-- MasOpciones -->
+    <string name="mp_nombre">Más Opciones</string>
+    <string name="mp_conf_Wifi">Configurar Wi-Fi</string>
+    <string name="mp_nombreWifi">Nombre Wifi (SSID)</string>
+    <string name="mp_wifiPassword">Contraseña Wifi</string>
+    <string name="mp_btnEnviar">Enviar</string>
+    <string name="mp_solcitar">TODO</string>
 </resources>

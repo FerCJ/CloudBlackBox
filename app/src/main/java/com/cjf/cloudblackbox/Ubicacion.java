@@ -75,14 +75,12 @@ public class Ubicacion extends AppCompatActivity implements OnMapReadyCallback {
                         if (marker !=null)
                             marker.remove();
 
-
                         LatLng newLocation=new LatLng(Latitud,Longitud);
                         marker=mMap.addMarker(new MarkerOptions().position(newLocation).title("hola"));
 
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation,15));
                     }
                 });
-
     }
 
     @Override
