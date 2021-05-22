@@ -74,7 +74,6 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
             public void onChanged(ArrayList<String> strings) {
                 if (strings != null)
                 {
-
                     //Obtener(strings);
                     progressBar.setVisibility(View.GONE);
                     for (String trayecto: strings)
@@ -96,19 +95,14 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
                     });
                     listaTrayectorias.setAdapter(adaptador);
                 }
-
-
             }
         });
 
         firebaseViewModel.getTrayectoriaSeleccionada().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                Log.i(TAG2, "Si entra a reproducir el video" );
-                Log.i(TAG2, "El path recibido es:  " + s );
                 FILE_NAME = s;
                 leeArchivo();
-
             }
         });
 
@@ -146,7 +140,6 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
         polyline1 = rutas.addPolyline(new PolylineOptions()
                 .clickable(true));
 
-
         if (coordenadasLista.size() > 0)
         {
             for (LatLng coordenada: coordenadasLista)
@@ -155,14 +148,6 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
                         .add(coordenada));
             }
         }
-
-
-
-
-
-       /* // Set listeners for click events.
-        mapa.setOnPolylineClickListener(this);
-        mapa.setOnPolygonClickListener(this);*/
 
     }
 
@@ -206,13 +191,9 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
         StringBuilder stringBuilder = new StringBuilder();
 
         try {
-            // Apertura del fichero y creacion de BufferedReader para poder
-            // hacer una lectura comoda (disponer del metodo readLine()).
             archivo = new File (FILE_NAME);
             fr = new FileReader (archivo);
             br = new BufferedReader(fr);
-
-            // Lectura del fichero
 
             while((linea=br.readLine())!=null)
                 stringBuilder.append(linea).append("");
@@ -224,11 +205,6 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
         }
         finally
         {
-
-
-            // En el finally cerramos el fichero, para asegurarnos
-            // que se cierra tanto si todo va bien como si salta
-            // una excepcion.
             try{
                 if( null != fr )
                 {
@@ -289,13 +265,6 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
             rutas.addMarker(new MarkerOptions().position(sydney).title("Inicio"));
             rutas.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomlevel));
 
-
-
-           /* Polyline polyline2 = rutas.addPolyline(new PolylineOptions()
-                    .clickable(true)
-                    .add(
-                            new LatLng(19.457271,-99.20797),
-                            new LatLng(19.457547,-99.207848)));*/
             polyline1.setPoints(coordenadasLista);
             sydney = coordenadasLista.get(coordenadasLista.size()-1);
             rutas.addMarker(new MarkerOptions().position(sydney).title("Fin"));
@@ -305,12 +274,6 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
             startTrayecto = trayectorias.indexOf("#",aux1-1);
             aux1 = trayectorias.indexOf("#",startTrayecto+1);
         }
-
-    }
-
-    public void  dibujarTrayectorias()
-    {
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -319,15 +282,7 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
         firebaseViewModel.ObtenerTrayectorias(UserID);
 
     }
-    /*public void ObtenerListaVideos(ArrayList<String> VideosFirebase){
-        List<ListaVideos> ListaVideos=new ArrayList<>();
-        for(int i=0;i<VideosFirebase.size();i++){
-            for (int j=0;j<VideosFirebase.get(i).length();j++){
-                if(VideosFirebase.get(i).charAt(j)=='@')
-                    videos.add(new ListaVideos(VideosFirebase.get(i).substring(0,j),VideosFirebase.get(i).substring(j+1,VideosFirebase.get(i).length()), R.drawable.icons8_video_100));
-            }
-        }
-    }*/
+
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void ObtenerLinkTrayectoriaSeleccionada(String UserID, String NombreTrayectoria){
         firebaseViewModel.ObtenerTrayectoriaSeleccionada(UserID,NombreTrayectoria);

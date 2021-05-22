@@ -1,10 +1,13 @@
 package com.cjf.cloudblackbox;
 
+
+import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,24 +24,21 @@ public class BluetoothService {
     private BluetoothDevice mDevice;
     private ConnectThread mmConnectThread;
     private ConnectedThread mmConnectedThread;
-    private  static  UUID MyUUID;
+    private  static UUID MyUUID;
     private  android.os.Handler mmHandler;
 
-    public BluetoothService(Context context, BluetoothDevice Device, UUID Uuid, android.os.Handler mHandler) {
+    public BluetoothService( Context context, BluetoothDevice Device, UUID Uuid, android.os.Handler mHandler) {
+
         mcontext=context;
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mmHandler = mHandler;
         IniciarCliente(Device,Uuid);
     }
 
-   /* public BluetoothService(MainActivity context, BluetoothDevice Device, UUID Uuid, Handler mHandler) {
-
-    }*/
-
-
     private class ConnectThread extends  Thread{
         private BluetoothSocket mmSocket;
-
+        byte[] buffer1= new byte[1024];
+        int bytes1;
         public  ConnectThread (BluetoothDevice Device, UUID Uuid){
             mDevice=Device;
             MyUUID=Uuid;
@@ -56,16 +56,28 @@ public class BluetoothService {
             if(!mmSocket.isConnected()){
                 try {
                     mmSocket.connect();
+                    //Enviando mensaje de que se conecto de manera correcta
+
+                    buffer1="Conexion creada correctamente".getBytes();
+                    bytes1=buffer1.length;
+                    mmHandler.obtainMessage(1, bytes1, -1, buffer1)
+                            .sendToTarget();
+                    //Toast.makeText(mcontext, "Se ha conectado", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "run: ConnectThread connected.");
                 } catch (IOException e) {
                     e.printStackTrace();
                     try {
                         mmSocket.close();
+
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                         Log.d(TAG, "run: Closed Socket.");
                     }
                     Log.d(TAG, "run: ConnectThread: Could not connect to UUID: " + MyUUID );
+                    buffer1="No se pudo conectar".getBytes();
+                    bytes1=buffer1.length;
+                    mmHandler.obtainMessage(3, bytes1, -1, buffer1)
+                            .sendToTarget();
                 }
             }
 
@@ -104,21 +116,25 @@ public class BluetoothService {
             mmOutputStream=outemp;
         }
 
-       public void run(){
+        public void run(){
             byte[] buffer= new byte[1024];
-           Log.d("run:input","Buffer" + buffer);
             int bytes;
             while(true){
-                Log.d("run:READ","Entra al Run para READ");
                 try {
-
                     bytes=mmInputStream.read(buffer);
                     String MensajeCPU=new String(buffer,0,bytes);
                     if (!MensajeCPU.equals("65280")) {
-                        mmHandler.obtainMessage(1, bytes, -1, buffer)
+                        mmHandler.obtainMessage(3, bytes, -1, buffer)
+                                .sendToTarget();
+                    }else if(MensajeCPU.equals("Modo de uso configurado"))
+                    {
+                        Log.d("PROBANDO RESPUESTA", "entro al elseif ");
+                        System.out.println("ENTRO AL ELSEIF");
+                        mmHandler.obtainMessage(2, bytes, -1, buffer)
                                 .sendToTarget();
                     }else{
-                        mmHandler.obtainMessage(2, bytes, -1, buffer)
+                        Log.d("PROBANDO RESPUESTA", "entro al elseif ");
+                        mmHandler.obtainMessage(4, bytes, -1, buffer)
                                 .sendToTarget();
                     }
 
@@ -162,9 +178,4 @@ public class BluetoothService {
         Bytes=Msg.getBytes();
         mmConnectedThread.write(Bytes);
     }
-
-
-
-
-
 }

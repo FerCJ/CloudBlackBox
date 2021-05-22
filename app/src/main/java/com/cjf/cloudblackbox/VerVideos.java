@@ -61,7 +61,6 @@ public class VerVideos extends AppCompatActivity {
             public void onChanged(ArrayList<String> strings) {
                 if (strings != null)
                 {
-
                     ObtenerListaVideos(strings);
                     progressBar.setVisibility(View.GONE);
                     listaVideos.setLayoutManager( new LinearLayoutManager(getBaseContext()));
@@ -76,7 +75,6 @@ public class VerVideos extends AppCompatActivity {
                     });
                     listaVideos.setAdapter(adaptador);
                 }
-
             }
         });
 

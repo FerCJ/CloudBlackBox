@@ -1,55 +1,46 @@
 package com.cjf.cloudblackbox;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
-public class SeleccionarModo extends AppCompatActivity implements onOpcionListener {
+public class MasOpciones extends AppCompatActivity {
 
-    private ArrayList<Modos> modos;
-    private RecyclerView listaModos;
     private Context context;
     BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     //BluetoothSocket mmSocket;
     BluetoothDevice mmDevice = null;
     BluetoothService mmBluetoothService;
 
+    private EditText etNombreWF;
+    private EditText etPassWF;
+    private Button btnAtras;
+    private Button btnConectarBT;
+    private Button btnEnviar;
 
-    private Handler mHandler= new MyHandler(this);
+
+
+    private Handler mHandler= new MasOpciones.MyHandler(this);
 
     private class MyHandler extends Handler{
-        private WeakReference<SeleccionarModo> mActivity;
-        public MyHandler(SeleccionarModo activity) {
-            mActivity = new WeakReference<SeleccionarModo>(activity);
+        private WeakReference<MasOpciones> mActivity;
+        public MyHandler(MasOpciones activity) {
+            mActivity = new WeakReference<MasOpciones>(activity);
             //context=activity.getApplicationContext();
         }
         @Override
@@ -75,29 +66,21 @@ public class SeleccionarModo extends AppCompatActivity implements onOpcionListen
 
     int REQUEST_ENABLE_BL = 1;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_seleccionar_modo);
+        setContentView(R.layout.activity_mas_opciones);
         context = this;
 
-        modos = new ArrayList<Modos>();
-        modos.add(new Modos("Modo Trayecto",R.drawable.trayectoicon));
-        modos.add(new Modos("Modo Parking",R.drawable.parkingicon));
-
-        listaModos = (RecyclerView) findViewById(R.id.rvModo);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        listaModos.setLayoutManager(llm);
-        SeleccionarModoAdaptador adaptador = new SeleccionarModoAdaptador(modos,this);
-        listaModos.setAdapter(adaptador);
+        etNombreWF = (EditText) findViewById(R.id.etNombreWF);
+        etPassWF = (EditText) findViewById(R.id.etPwdWF);
+        btnAtras = (Button) findViewById(R.id.btnReturnOpc);
+        btnConectarBT = (Button) findViewById(R.id.btnConectarBTOpc);
+        btnEnviar = (Button) findViewById(R.id.btnEnviarConfWF);
 
         EncenderBlue();
 
-
-        Button closeButton = (Button) findViewById(R.id.btnReturn);
-        closeButton.setOnClickListener(new View.OnClickListener() {
+        btnAtras.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v)
@@ -106,51 +89,50 @@ public class SeleccionarModo extends AppCompatActivity implements onOpcionListen
             }
         });
 
-        Button bluetooth = (Button) findViewById(R.id.btnConectarBT);
-
-        bluetooth.setOnClickListener(new View.OnClickListener() {
+        btnConectarBT.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
                 ObtenerDatosRaspBerry();
                 UUID uuid=UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");
-
                 mmBluetoothService=new BluetoothService(context,mmDevice,uuid, mHandler);
+
+                if (mmBluetoothService != null)
+                {
+                    etNombreWF.setEnabled(true);
+                    etPassWF.setEnabled(true);
+                    btnEnviar.setEnabled(true);
+                }
 
             }
         });
-    }
 
-    @Override
-    public void onOpcionClick(int position) {
-        int posicion = position;
-
-        switch (posicion) {
-
-            case 0:
+        btnEnviar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (mmBluetoothService != null)
                 {
-                    mmBluetoothService.write("Trayecto");
+                    mmBluetoothService.write(etNombreWF.getText().toString());
+                    new CountDownTimer(1000, 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            mmBluetoothService.write(etPassWF.getText().toString());
+                        }
+                    };
                 }
                 else
                 {
-                    Toast.makeText(this, "Primero necesita conectarse a la raspberry", Toast.LENGTH_SHORT) .show();
+                    Toast.makeText(MasOpciones.this, "Primero necesita conectarse a la raspberry", Toast.LENGTH_SHORT) .show();
                 }
-                break;
-            case 1:
-                if (mmBluetoothService != null)
-                {
-                    mmBluetoothService.write("Parking");
-                }
-                else
-                {
-                    Toast.makeText(this, "Primero necesita conectarse a la raspberry", Toast.LENGTH_SHORT) .show();
-                }
-                break;
-            default:
-                break;
-        }
+
+            }
+        });
     }
 
     private void EncenderBlue() {
@@ -173,6 +155,9 @@ public class SeleccionarModo extends AppCompatActivity implements onOpcionListen
             }
         }
     }
+
+
+
 
 
 

@@ -17,12 +17,14 @@ public class Estadisticas extends AppCompatActivity implements onOpcionListener{
 
     private ArrayList<Estadistica> estadisticas;
     private RecyclerView listaEstadisticas;
+    String UserID;
 
     private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        UserID=getIntent().getExtras().get("ID").toString();
         setContentView(R.layout.activity_estadisticas);
 
         estadisticas = new ArrayList<Estadistica>();
@@ -67,6 +69,7 @@ public class Estadisticas extends AppCompatActivity implements onOpcionListener{
 
             case 0:
                 Intent intent = new Intent(this, Gasolina.class );
+                intent.putExtra("ID",UserID);
                 startActivity(intent);
                 break;
            /* case 1:
@@ -77,12 +80,13 @@ public class Estadisticas extends AppCompatActivity implements onOpcionListener{
             case 2:
                 intent = new Intent(this, Trayectorias.class);
                 startActivity(intent);
-                break;
+                break;*/
             case 3:
-                intent = new Intent(this, Ubicacion.class);
+                intent = new Intent(this, RPM.class);
+                intent.putExtra("ID",UserID);
                 startActivity(intent);
                 break;
-            case 4:
+           /* case 4:
                 intent = new Intent(this, Estadisticas.class);
                 startActivity(intent);
                 break;*/
