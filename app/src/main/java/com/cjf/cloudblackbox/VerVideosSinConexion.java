@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,10 +29,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class VerVideosSinConexion extends AppCompatActivity {
+public class VerVideosSinConexion extends AppCompatActivity implements View.OnClickListener {
 
     BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    //BluetoothSocket mmSocket;
     BluetoothDevice mmDevice = null;
     BluetoothService mmBluetoothService;
     static TextView RecCPU,PruevaVideo;
@@ -40,14 +40,12 @@ public class VerVideosSinConexion extends AppCompatActivity {
     static List<ListaVideos> Videos=new ArrayList();
     static VideoView Videoview;
     static String VideoSeleccionado;
+    Button EncenderBluetooth;
 
 
-/*String MacRasp="DC:A6:32:A4:41:AD";
-    String NameRasp="RaspBerryNava";
-    Button EncenderBlue,ConectarCPU,EnviarComando;
-    TextInputEditText Comando;*/
 
     private Handler mHandler= new MyHandler(this);
+
 
     private class MyHandler extends Handler{
         private WeakReference<VerVideosSinConexion> mActivity;
@@ -60,11 +58,17 @@ public class VerVideosSinConexion extends AppCompatActivity {
             byte[] buffer = (byte[]) msg.obj;
             switch (msg.what){
                 case 1:
+                    String MensajeConexion=new String(buffer,0,msg.arg1);
+                    Toast.makeText(getApplication(),MensajeConexion,Toast.LENGTH_SHORT).show();
+                    PedirVideos();
+                    break;
+                case 4:
                     String MensajeCPU=new String(buffer,0,msg.arg1);
                     CrearListaVideos(MensajeCPU);
                     break;
-                case 2:
+                case 5:
                     ReproducirVideo();
+
                     break;
             }
         }
@@ -76,17 +80,16 @@ public class VerVideosSinConexion extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_videos_sin_conexion);
-        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         recyclerViewVsc=(RecyclerView)findViewById(R.id.rvListaVsc);
         Videoview=(VideoView)findViewById(R.id.vvVideoVsc);
-
+        EncenderBluetooth=(Button) findViewById(R.id.btnConectarBTVsc);
+        EncenderBluetooth.setOnClickListener(this);
         EncenderBlue();
-        ObtenerDatosRaspBerry();
 
+        //Obtener permisos de bluetooth
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                System.out.println("Entro al if");
-
 
             } else {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE))
@@ -98,21 +101,22 @@ public class VerVideosSinConexion extends AppCompatActivity {
             }
 
         }
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        ObtenerDatosRaspBerry();
         UUID uuid=UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");
 
         mmBluetoothService=new BluetoothService(this,mmDevice,uuid, mHandler);
+    }
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void PedirVideos(){
         mmBluetoothService.write("Videos");
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    }
+
+    public void InflarRecycler(){
         recyclerViewVsc.setLayoutManager(new LinearLayoutManager(this));
         AdaptadorVideos= new VerVideosAdaptador(Videos);
         AdaptadorVideos.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +127,6 @@ public class VerVideosSinConexion extends AppCompatActivity {
             }
         });
         recyclerViewVsc.setAdapter(AdaptadorVideos);
-
     }
 
     //EnciendeBluetooth
@@ -131,8 +134,6 @@ public class VerVideosSinConexion extends AppCompatActivity {
         if (!bluetoothAdapter.isEnabled()) {
             Intent intentBlEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(intentBlEnable, REQUEST_ENABLE_BL);
-        } else {
-            Toast.makeText(this, "El Bluetooth ya esta encendido", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -148,7 +149,7 @@ public class VerVideosSinConexion extends AppCompatActivity {
         }
     }
 
-    private static void CrearListaVideos(String lisVideos){
+    private void CrearListaVideos(String lisVideos){
         int auxiliar=-1;
 
 
@@ -162,6 +163,7 @@ public class VerVideosSinConexion extends AppCompatActivity {
             }
         }
 
+        InflarRecycler();
     }
 
     private void ReproducirVideo(){//Context context){

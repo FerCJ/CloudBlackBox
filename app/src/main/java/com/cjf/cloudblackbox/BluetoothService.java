@@ -123,17 +123,14 @@ public class BluetoothService {
                 try {
                     bytes=mmInputStream.read(buffer);
                     String MensajeCPU=new String(buffer,0,bytes);
-                    if (!MensajeCPU.equals("65280")) {
-                        mmHandler.obtainMessage(3, bytes, -1, buffer)
+                    if (MensajeCPU.equals("65280")) {
+                        mmHandler.obtainMessage(5, bytes, -1, buffer)
                                 .sendToTarget();
                     }else if(MensajeCPU.equals("Modo de uso configurado"))
                     {
-                        Log.d("PROBANDO RESPUESTA", "entro al elseif ");
-                        System.out.println("ENTRO AL ELSEIF");
                         mmHandler.obtainMessage(2, bytes, -1, buffer)
                                 .sendToTarget();
                     }else{
-                        Log.d("PROBANDO RESPUESTA", "entro al elseif ");
                         mmHandler.obtainMessage(4, bytes, -1, buffer)
                                 .sendToTarget();
                     }
