@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -104,12 +105,22 @@ public class VerVideos extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // TODO:
-                // This function closes Activity Two
-                // Hint: use Context's finish() method
                 finish();
             }
         });
+
+        Button sinConexion = (Button) findViewById(R.id.btnVideosSC);
+        sinConexion.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                Intent  intent = new Intent(VerVideos.this,VerVideosSinConexion.class);
+                startActivity(intent);
+            }
+        });
+
+
 
 
     }

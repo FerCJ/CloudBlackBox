@@ -19,7 +19,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".RPM"></activity>
+        <activity android:name=".VerVideosSinConexion"></activity>
+        <activity android:name=".RPM" />
         <activity android:name=".MasOpciones" />
         <activity android:name=".Gasolina" />
         <activity android:name=".Estadisticas" />
