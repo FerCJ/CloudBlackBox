@@ -1,8 +1,6 @@
-package com.cjf.cloudblackbox;
+package com.cjf.cloudblackbox.adaptador;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,7 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.cjf.cloudblackbox.pojo.OpcionesPrincipal;
+import com.cjf.cloudblackbox.R;
+import com.cjf.cloudblackbox.onOpcionListener;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,5 @@
-package com.cjf.cloudblackbox;
+package com.cjf.cloudblackbox.adaptador;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.cjf.cloudblackbox.pojo.ListaVideos;
+import com.cjf.cloudblackbox.R;
+
 import java.util.List;
 
 public class VerVideosAdaptador extends RecyclerView.Adapter<VerVideosAdaptador.ViewHolder> implements  View.OnClickListener{

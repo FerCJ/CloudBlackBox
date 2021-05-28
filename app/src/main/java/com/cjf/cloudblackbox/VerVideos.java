@@ -6,25 +6,22 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.VideoView;
 
+import com.cjf.cloudblackbox.adaptador.VerVideosAdaptador;
+import com.cjf.cloudblackbox.pojo.ListaVideos;
 import com.cjf.cloudblackbox.viewmodel.FirebaseViewModel;
-
-import org.w3c.dom.ls.LSException;
 
 import java.util.ArrayList;
 import java.util.List;

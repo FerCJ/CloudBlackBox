@@ -4,18 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.LayoutInflater;
 import android.view.View;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.cjf.cloudblackbox.adaptador.OpcionesPrincialAdaptador;
+import com.cjf.cloudblackbox.pojo.OpcionesPrincipal;
 
 import java.util.ArrayList;
 

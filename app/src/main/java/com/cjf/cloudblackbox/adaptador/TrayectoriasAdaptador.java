@@ -1,4 +1,4 @@
-package com.cjf.cloudblackbox;
+package com.cjf.cloudblackbox.adaptador;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.cjf.cloudblackbox.R;
+import com.cjf.cloudblackbox.pojo.Trayectoria;
+
 import java.util.List;
 
 public class TrayectoriasAdaptador extends RecyclerView.Adapter<TrayectoriasAdaptador.ViewHolder> implements View.OnClickListener {

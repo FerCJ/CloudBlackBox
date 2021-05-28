@@ -1,4 +1,4 @@
-package com.cjf.cloudblackbox;
+package com.cjf.cloudblackbox.pojo;
 
 public class Modos {
 

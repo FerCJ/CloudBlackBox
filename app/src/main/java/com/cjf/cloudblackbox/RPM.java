@@ -1,8 +1,10 @@
 package com.cjf.cloudblackbox;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +17,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.maps.model.Marker;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class RPM extends AppCompatActivity {
@@ -22,11 +26,38 @@ public class RPM extends AppCompatActivity {
     private FirebaseViewModel firebaseViewModel;
     String UserID;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rpm);
         UserID=getIntent().getExtras().get("ID").toString();
+
+       /* LocalDate fechaActual = LocalDate.now();
+        System.out.println("Fecha actual es: " + fechaActual);
+        LocalDate fechaSemana = LocalDate.now().minusDays(7);
+        System.out.println("Fecha semanaD es: " + fechaSemana);
+        fechaSemana = LocalDate.now().minusWeeks(1);
+        System.out.println("Fecha semanaW es: " + fechaSemana);
+        LocalDate fechaMes = LocalDate.now().minusMonths(1);
+        System.out.println("Fecha mes es: " + fechaMes);
+*/
+        ArrayList<String> fechasSemana = new ArrayList<>();
+
+        for (int i = 0;i<7;  i++)
+        {
+            fechasSemana.add(LocalDate.now().minusDays(7-i).toString());
+        }
+
+        for (String fecha : fechasSemana)
+        {
+
+            System.out.println("Fechas semana: " + LocalDate.parse(fecha,DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+        }
+
+
+
+       // LocalDate.parse(LocalDate.now().toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         BarChart barChart = findViewById(R.id.ctRPM);
 

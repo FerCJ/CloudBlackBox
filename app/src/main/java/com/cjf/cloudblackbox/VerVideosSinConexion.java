@@ -22,6 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.cjf.cloudblackbox.adaptador.VerVideosAdaptador;
+import com.cjf.cloudblackbox.pojo.ListaVideos;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
