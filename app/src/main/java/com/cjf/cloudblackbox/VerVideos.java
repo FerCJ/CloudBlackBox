@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.cjf.cloudblackbox.adaptador.VerVideosAdaptador;
@@ -67,7 +68,7 @@ public class VerVideos extends AppCompatActivity {
                     adaptador.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            NombreVideoSeleccionado = videos.get(listaVideos.getChildAdapterPosition(view)).getHora();
+                            NombreVideoSeleccionado = videos.get(listaVideos.getChildAdapterPosition(view)).getFecha();
                             ObtenerLinkVideoSeleccionado(userID,NombreVideoSeleccionado);
                         }
                     });
@@ -134,6 +135,7 @@ public class VerVideos extends AppCompatActivity {
             for (int j=0;j<VideosFirebase.get(i).length();j++){
                 if(VideosFirebase.get(i).charAt(j)=='@')
                     videos.add(new ListaVideos(VideosFirebase.get(i).substring(0,j),VideosFirebase.get(i).substring(j+1,VideosFirebase.get(i).length()), R.drawable.icons8_video_100));
+                     //Toast.makeText(this,VideosFirebase.get(i).substring(0,j),Toast.LENGTH_SHORT).show();
             }
         }
     }
