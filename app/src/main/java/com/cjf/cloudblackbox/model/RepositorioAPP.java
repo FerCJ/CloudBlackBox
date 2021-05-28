@@ -175,7 +175,7 @@ public class RepositorioAPP {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot document: task.getResult())
-                        ListVideos.add(document.get("Nombre").toString()+"@"+document.get("Fecha").toString());
+                        ListVideos.add(document.get("Hora").toString()+"@"+document.get("Fecha").toString());
 
                     Videos.postValue(ListVideos);
                 }
@@ -191,18 +191,25 @@ public class RepositorioAPP {
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void ObtenerVideoSeleccionado(String UserID, String NombreVideo){
         nombreVideo = NombreVideo;
-
+        Log.d("DESCARGARVIDEO", "LINK " + UserID);
+        Log.d("DESCARGARVIDEO", "LINK " + NombreVideo);
         firebaseFirestore.collection("Videos")
                 .whereEqualTo("UserId",UserID)
-                .whereEqualTo("Nombre",NombreVideo)
+                .whereEqualTo("Hora",NombreVideo)
                 .get().addOnCompleteListener(application.getMainExecutor(), new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 String LinkVideo="";
                 if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot document: task.getResult())
-                        LinkVideo=document.get("Link").toString();
+                    Log.d("DESCARGARVIDEO", task.getResult().toString());
+                    for(QueryDocumentSnapshot document: task.getResult()) {
+                        Log.d("DESCARGARVIDEO", document.get("Link").toString());
+                        nombreVideo=document.get("Nombre").toString();
+                        LinkVideo = document.get("Link").toString();
+                    }
 
+                    Log.d("DESCARGARVIDEO", "LINK " + LinkVideo);
+                    Log.d("DESCARGARVIDEO", "NOMBREVIDEO " + nombreVideo);
                     StorageReference VidReference= firebaseStorage.getReferenceFromUrl(LinkVideo);
                     try {
                         localfile= File.createTempFile(nombreVideo,"mp4");
