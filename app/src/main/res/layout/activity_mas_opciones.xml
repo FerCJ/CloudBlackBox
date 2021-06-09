@@ -97,9 +97,8 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:paddingTop="15dp"
-            android:text="@string/mp_nombreWifi"
-            android:textColor="#000000"
-            android:backgroundTint="#000000"
+            android:hint="@string/mp_nombreWifi"
+            android:textColorHint="#000000"
             android:enabled="false"/>
 
         <EditText
@@ -108,9 +107,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="@string/mp_wifiPassword"
-            android:textColor="#000000"
-            android:backgroundTint="#000000"
+            android:hint="@string/mp_wifiPassword"
+            android:textColorHint="#000000"
             android:enabled="false"/>
 
         <Button

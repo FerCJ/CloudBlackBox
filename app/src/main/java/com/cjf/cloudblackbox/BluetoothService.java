@@ -130,6 +130,14 @@ public class BluetoothService {
                     {
                         mmHandler.obtainMessage(2, bytes, -1, buffer)
                                 .sendToTarget();
+                    }else if(MensajeCPU.equals("wifi conectado correctamente"))
+                    {
+                        mmHandler.obtainMessage(6, bytes, -1, buffer)
+                                .sendToTarget();
+                    }else if(MensajeCPU.equals("ocurrio un error al conectar wifi"))
+                    {
+                        mmHandler.obtainMessage(7, bytes, -1, buffer)
+                                .sendToTarget();
                     }else{
                         mmHandler.obtainMessage(4, bytes, -1, buffer)
                                 .sendToTarget();
