@@ -69,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // Get new FCM registration token
                         Token = task.getResult();
 
-
-
                     }
                 });
 

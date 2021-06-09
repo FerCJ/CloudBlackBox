@@ -43,7 +43,7 @@ public class VerVideosSinConexion extends AppCompatActivity implements View.OnCl
     static List<ListaVideos> Videos=new ArrayList();
     static VideoView Videoview;
     static String VideoSeleccionado;
-    Button EncenderBluetooth;
+    Button EncenderBluetooth, btnRegresarVsc;
 
 
 
@@ -86,6 +86,7 @@ public class VerVideosSinConexion extends AppCompatActivity implements View.OnCl
 
         recyclerViewVsc=(RecyclerView)findViewById(R.id.rvListaVsc);
         Videoview=(VideoView)findViewById(R.id.vvVideoVsc);
+        btnRegresarVsc = (Button) findViewById(R.id.btnReturnVsc);
         EncenderBluetooth=(Button) findViewById(R.id.btnConectarBTVsc);
         EncenderBluetooth.setOnClickListener(this);
         EncenderBlue();
@@ -104,6 +105,13 @@ public class VerVideosSinConexion extends AppCompatActivity implements View.OnCl
             }
 
         }
+
+        btnRegresarVsc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 

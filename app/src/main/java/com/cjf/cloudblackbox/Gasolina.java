@@ -22,7 +22,7 @@ public class Gasolina extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gasolina);
 
-        BarChart barChart = findViewById(R.id.ctGasolina);
+       /* BarChart barChart = findViewById(R.id.ctGasolina);
 
         ArrayList<BarEntry> gasolina  = new ArrayList<>();
 
@@ -41,7 +41,9 @@ public class Gasolina extends AppCompatActivity {
         barChart.setFitBars(true);
         barChart.setData(barData);
         barChart.getDescription().setText("Ejemplo grafica de barras");
-        barChart.animateY(2000);
+        barChart.animateY(2000);*/
+
+
 
         Button closeButton = (Button) findViewById(R.id.btnReturnGasolina);
         closeButton.setOnClickListener(new View.OnClickListener() {

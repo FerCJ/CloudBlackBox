@@ -11,19 +11,8 @@
         android:id="@+id/barraVideo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/llPerfil"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <LinearLayout
-        android:id="@+id/llPerfil"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        Bottom_toBottomOf="@+id/llPerfil"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -67,47 +56,105 @@
                 android:id="@+id/progressBarVideos"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+
         </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvListaVideos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            android:paddingRight="10dp"
-            tools:ignore="MissingConstraints"></androidx.recyclerview.widget.RecyclerView>
+    </com.google.android.material.appbar.AppBarLayout>
 
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorAccent" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvListaVideos"
+        android:layout_width="match_parent"
+        android:layout_height="340dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.162"
+        tools:ignore="MissingConstraints"></androidx.recyclerview.widget.RecyclerView>
 
-        <VideoView
-            android:id="@+id/vvVideo"
-            android:layout_width="match_parent"
-            android:layout_height="131dp"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="239dp" />
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.561"
+        tools:layout_editor_absoluteX="0dp" />
 
-        <Button
-            android:id="@+id/btnVideosSC"
-            android:layout_width="311dp"
-            android:layout_height="53dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:background="@color/colorAccent"
-            android:fontFamily="@font/roboto"
-            android:text="Videos sin WiFi"
-            android:textColor="#FFFFFF"
-            android:textColorLink="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+    <VideoView
+        android:id="@+id/vvVideo"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btnVideosSC"
+        android:layout_width="311dp"
+        android:layout_height="53dp"
+        android:layout_gravity="center"
+        android:background="@color/colorAccent"
+        android:fontFamily="@font/roboto"
+        android:text="Videos sin WiFi"
+        android:textColor="#FFFFFF"
+        android:textColorLink="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.617" />
+
+    <Button
+        android:id="@+id/btnDescarga"
+        android:layout_width="217dp"
+        android:layout_height="165dp"
+        android:visibility="gone"
+        android:background="#2D7E7E7E"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.532"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.461" />
+
+    <ImageView
+        android:id="@+id/imgvDescarga"
+        android:layout_width="106dp"
+        android:layout_height="85dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.53"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.488"
+        android:visibility="gone"
+        app:srcCompat="@drawable/logov2" />
+
+    <ProgressBar
+        android:id="@+id/progressBarDescarga"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="145dp"
+        android:layout_height="134dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.544"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.483" />
 
 
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

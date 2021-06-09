@@ -9,14 +9,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -52,6 +56,9 @@ public class VerVideos extends AppCompatActivity {
         listaVideos = (RecyclerView) findViewById(R.id.rvListaVideos);
         progressBar = (ProgressBar) findViewById((R.id.progressBarVideos));
 
+        ImageView imgDescarga = (ImageView) findViewById(R.id.imgvDescarga);
+        Button btnDescarga = (Button) findViewById(R.id.btnDescarga);
+        ProgressBar progressBarDescarga = (ProgressBar) findViewById(R.id.progressBarDescarga);
 
 
         firebaseViewModel = ViewModelProviders.of(this).get(FirebaseViewModel.class);
@@ -70,6 +77,10 @@ public class VerVideos extends AppCompatActivity {
                         public void onClick(View view) {
                             NombreVideoSeleccionado = videos.get(listaVideos.getChildAdapterPosition(view)).getFecha();
                             ObtenerLinkVideoSeleccionado(userID,NombreVideoSeleccionado);
+                            Toast.makeText(VerVideos.this,"Descargando video...",Toast.LENGTH_SHORT).show();
+                            imgDescarga.setVisibility(View.VISIBLE);
+                            btnDescarga.setVisibility(View.VISIBLE);
+                            progressBarDescarga.setVisibility(View.VISIBLE);
                         }
                     });
                     listaVideos.setAdapter(adaptador);
@@ -85,12 +96,22 @@ public class VerVideos extends AppCompatActivity {
             public void onChanged(Uri uri) {
                 if (uri != null)
                 {
-                    Log.i(TAG2, "Si entra a reproducir el video" );
-                    Log.i(TAG2, "El link recibido es:  " + uri.toString() );
+                    String fullScreen =  getIntent().getStringExtra("fullScreenInd");
+                    if("y".equals(fullScreen)){
+                        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                        getSupportActionBar().hide();
+                    }
+                    System.out.println("link: " + uri.toString());
                     videoView.setVideoURI(uri);
+                    //MediaController mediaController = new FullScreenMediaController(VerVideos.this,userID);
                     MediaController mediaController = new MediaController(VerVideos.this);
+                    mediaController.setAnchorView(videoView);
                     videoView.setMediaController(mediaController);
                     videoView.requestFocus();
+                    imgDescarga.setVisibility(View.GONE);
+                    btnDescarga.setVisibility(View.GONE);
+                    progressBarDescarga.setVisibility(View.GONE);
                     videoView.start();
 
                 }
