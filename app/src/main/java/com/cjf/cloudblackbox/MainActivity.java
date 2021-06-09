@@ -108,19 +108,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent=new Intent(this,RecuperarPassword.class);
             startActivity(intent);
         }
-        else{
+        if(v.getId()==R.id.btnIniciarSesion){
             progressBar.setVisibility(View.VISIBLE);
             firebaseViewModel.IniciarSesion(Correo.getText().toString(),Contraseña.getText().toString(),Token);
         }
     }
-
-  /*  private void enviarTokenRegistro(String Token)
-    {
-        Log.d("token enviado", "El token es: " + Token);
-    }*/
-
-
-
 }
 
 //Token cmdMkI7dRoKVNAP78bfxbg:APA91bEfOO4Sz-yW3AqCeznXEgBvwosYQS3UQPz1W_DvW6hU_7BNoaN1tww93ELI3Vil3IyWM8X7hlcZJXSCoXkADMVpfXSd1t80cqQlKvlTV9nPU4-9d2Wh9fgTabYESspFhtt4aWHX

@@ -56,9 +56,13 @@ public class MasOpciones extends AppCompatActivity {
                         Toast.makeText(getApplication(), Estadodeconexion, Toast.LENGTH_SHORT).show();
                     }
                     break;
-                case 2:
-                    String MensajeCPU=new String(buffer,0,msg.arg1);
-                    Toast.makeText(getApplication(), MensajeCPU, Toast.LENGTH_SHORT).show();
+                case 6:
+                    String Mensaje6CPU=new String(buffer,0,msg.arg1);
+                    Toast.makeText(getApplication(), Mensaje6CPU, Toast.LENGTH_SHORT).show();
+                    break;
+                case 7:
+                    String Mensaje7CPU=new String(buffer,0,msg.arg1);
+                    Toast.makeText(getApplication(), Mensaje7CPU, Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -113,18 +117,9 @@ public class MasOpciones extends AppCompatActivity {
             public void onClick(View v) {
                 if (mmBluetoothService != null)
                 {
-                    mmBluetoothService.write(etNombreWF.getText().toString());
-                    new CountDownTimer(1000, 1000) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
+                    String Wifi="wifi@"+etNombreWF.getText().toString()+"@"+etPassWF.getText().toString();
+                    mmBluetoothService.write(Wifi);
 
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            mmBluetoothService.write(etPassWF.getText().toString());
-                        }
-                    };
                 }
                 else
                 {

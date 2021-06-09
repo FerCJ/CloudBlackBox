@@ -36,7 +36,7 @@
     <!-- Recuperar contraseña -->
     <string name="recuperar_Recuperar">Recuperar contraseña</string>
     <string name="recuperar_email">Correo Electrónico</string>
-    <string name="recuperar_telefono">Algún número de emergencia registrado</string>
+    <string name="recuperar_telefono">Numero telefonico principal</string>
     <string name="recuperar_btn_Validar">Validar</string>
     <string name="recuperar__passnew">Contraseña nueva</string>
     <string name="recuperar_confirmarnewpass">Confirmar contraseña nueva</string>
