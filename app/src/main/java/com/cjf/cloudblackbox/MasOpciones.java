@@ -29,9 +29,15 @@ public class MasOpciones extends AppCompatActivity {
 
     private EditText etNombreWF;
     private EditText etPassWF;
+    private EditText etmlMensaje;
     private Button btnAtras;
     private Button btnConectarBT;
     private Button btnEnviar;
+    private Button btnSolicitar;
+    private String UserID;
+
+    private String destinatario = "cloudblackboxsystem@gmail.com";
+
 
 
 
@@ -75,12 +81,15 @@ public class MasOpciones extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mas_opciones);
         context = this;
+        UserID=getIntent().getExtras().get("ID").toString();
 
         etNombreWF = (EditText) findViewById(R.id.etNombreWF);
         etPassWF = (EditText) findViewById(R.id.etPwdWF);
         btnAtras = (Button) findViewById(R.id.btnReturnOpc);
         btnConectarBT = (Button) findViewById(R.id.btnConectarBTOpc);
         btnEnviar = (Button) findViewById(R.id.btnEnviarConfWF);
+        etmlMensaje = (EditText) findViewById(R.id.etmlDatosMP);
+        btnSolicitar = (Button) findViewById(R.id.btnSolicitarFoto);
 
         EncenderBlue();
 
@@ -126,6 +135,42 @@ public class MasOpciones extends AppCompatActivity {
                     Toast.makeText(MasOpciones.this, "Primero necesita conectarse a la raspberry", Toast.LENGTH_SHORT) .show();
                 }
 
+            }
+        });
+
+        btnSolicitar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!etmlMensaje.getText().toString().matches(""))
+                {
+                    Toast.makeText(MasOpciones.this, "Seleccione una aplicación de correo electrónico", Toast.LENGTH_SHORT) .show();
+                    String enviarcorreo = destinatario;
+                    String enviarasunto = "Solicitud de fotogramas";
+                    String enviarmensaje = etmlMensaje.getText().toString() + " Usuario: " + UserID;
+
+                    // Defino mi Intent y hago uso del objeto ACTION_SEND
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+
+                    // Defino los Strings Email, Asunto y Mensaje con la función putExtra
+                    intent.putExtra(Intent.EXTRA_EMAIL,
+                            new String[] { enviarcorreo });
+                    intent.putExtra(Intent.EXTRA_SUBJECT, enviarasunto);
+                    intent.putExtra(Intent.EXTRA_TEXT, enviarmensaje);
+
+                    // Establezco el tipo de Intent
+                    intent.setType("message/rfc822");
+
+                    // Lanzo el selector de cliente de Correo
+                    startActivity(
+                            Intent
+                                    .createChooser(intent,
+                                            "Elije un cliente de Correo:"));
+
+                }
+                else
+                {
+                    Toast.makeText(MasOpciones.this, "Ingrese el mensaje del correo", Toast.LENGTH_SHORT) .show();
+                }
             }
         });
     }

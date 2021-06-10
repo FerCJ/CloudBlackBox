@@ -37,7 +37,7 @@ public class MenuPrincipal extends AppCompatActivity implements onOpcionListener
         opciones.add(new OpcionesPrincipal("Ubicación",R.drawable.ubicacionicon));
         opciones.add(new OpcionesPrincipal("Estadisticas",R.drawable.estadisticasicon));
         opciones.add(new OpcionesPrincipal("Contacto",R.drawable.contactoicon));
-        opciones.add(new OpcionesPrincipal("Más Opciones",R.drawable.contactoicon));
+        opciones.add(new OpcionesPrincipal("Más Opciones",R.drawable.icons8_opciones_para_ordenar_96));
 
         listaOpciones = (RecyclerView) findViewById(R.id.rvMenuPrincial);
         GridLayoutManager glm = new GridLayoutManager(this,2);

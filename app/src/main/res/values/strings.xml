@@ -102,4 +102,8 @@
     <string name="mp_wifiPassword">Contraseña Wifi</string>
     <string name="mp_btnEnviar">Enviar</string>
     <string name="mp_solcitar">TODO</string>
+    <string name="mp_SolicitarFoto">Solicitar Fotogramas</string>
+    <string name="mp_Datos">Ingrese la(s) fecha(s) que solicita, se enviarán a su correo registrado en sistema.</string>
+    <string name="mp_btnSolicitar">Solicitar</string>
+
 </resources>
