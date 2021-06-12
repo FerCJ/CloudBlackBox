@@ -39,6 +39,9 @@ public class VerVideos extends AppCompatActivity {
     private FirebaseViewModel firebaseViewModel;
     private  String NombreVideoSeleccionado;
     private ProgressBar progressBar;
+    private ImageView imgDescarga;
+    private Button btnDescarga;
+    private ProgressBar progressBarDescarga;
     private static final String TAG2 = "VerVideo";
 
     private ProgressDialog progressDialog;
@@ -56,9 +59,9 @@ public class VerVideos extends AppCompatActivity {
         listaVideos = (RecyclerView) findViewById(R.id.rvListaVideos);
         progressBar = (ProgressBar) findViewById((R.id.progressBarVideos));
 
-        ImageView imgDescarga = (ImageView) findViewById(R.id.imgvDescarga);
-        Button btnDescarga = (Button) findViewById(R.id.btnDescarga);
-        ProgressBar progressBarDescarga = (ProgressBar) findViewById(R.id.progressBarDescarga);
+        imgDescarga = (ImageView) findViewById(R.id.imgvDescarga);
+        btnDescarga = (Button) findViewById(R.id.btnDescarga);
+        progressBarDescarga = (ProgressBar) findViewById(R.id.progressBarDescarga);
 
 
         firebaseViewModel = ViewModelProviders.of(this).get(FirebaseViewModel.class);

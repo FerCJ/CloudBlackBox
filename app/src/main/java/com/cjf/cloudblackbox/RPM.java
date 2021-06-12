@@ -2,12 +2,16 @@ package com.cjf.cloudblackbox;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.cjf.cloudblackbox.viewmodel.FirebaseViewModel;
 import com.github.mikephil.charting.charts.BarChart;
@@ -28,9 +32,14 @@ import java.util.Date;
 public class RPM extends AppCompatActivity {
 
     private FirebaseViewModel firebaseViewModel;
-    String UserID;
+    String UserID,TEstadistica;
     private BarDataSet barDataSet;
-
+    ArrayList<String> fechasSemana = new ArrayList<>();
+    ArrayList<String> fechasMes = new ArrayList<>();
+    ArrayList<BarEntry> rpmsem  = new ArrayList<>();
+    ArrayList<BarEntry> rpmmen  = new ArrayList<>();
+    BarChart barChart;
+    String periodoestadistica;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -38,21 +47,74 @@ public class RPM extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rpm);
         UserID=getIntent().getExtras().get("ID").toString();
+        TEstadistica=getIntent().getExtras().get("Tipo").toString();
 
         Button semanas = (Button) findViewById(R.id.btnSemanalRPM);
         Button mes = (Button) findViewById(R.id.btnMensualRPM);
+        barChart = findViewById(R.id.ctRPM);
 
-        ArrayList<String> fechasSemana = new ArrayList<>();
-        ArrayList<String> fechasMes = new ArrayList<>();
+        firebaseViewModel = ViewModelProviders.of(this).get(FirebaseViewModel.class);
+        firebaseViewModel.getValEstadistica().observe(this, new Observer<ArrayList<String>>() {
+            @Override
+            public void onChanged(ArrayList<String> strings) {
+                ArrayList<String> EstadisticasFinales=OrdenarValores(strings);
 
-        BarChart barChart = findViewById(R.id.ctRPM);
-        ArrayList<BarEntry> rpmsem  = new ArrayList<>();
-        ArrayList<BarEntry> rpmmen  = new ArrayList<>();
+               // for(int i=0;i<fechasSemana.size();i++)
+                 //   Log.d("ESTADISTICAS","EstadisticasFinales: "+EstadisticasFinales.get(i)+Integer.toString(i));
+
+                if(periodoestadistica.equals("Semanal")){
+
+                    int z = 1;
+
+                    for (int i=0;i<fechasSemana.size();i++)
+                    {
+                        rpmsem.add(new BarEntry(z,(int)Float.parseFloat(EstadisticasFinales.get(i))));
+                        z += 1;
+                    }
+
+                    barDataSet = new BarDataSet(rpmsem,"Cantidad de RPM Semanal");
+                    barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                    barDataSet.setValueTextColor(Color.BLACK);
+                    barDataSet.setValueTextSize(16f);
+
+                    BarData barData = new BarData(barDataSet);
+                    barChart.setFitBars(true);
+                    barChart.setData(barData);
+                    barChart.getDescription().setText("Gráfica de barras");
+                    barChart.animateY(2000);
+                }
+                else{
+
+                    int z = 1;
+
+                    for (int i=0;i<fechasMes.size();i++)
+                    {
+                        rpmmen.add(new BarEntry(z,(int)Float.parseFloat(EstadisticasFinales.get(i))));
+                        z += 1;
+                    }
+
+                    barDataSet = new BarDataSet(rpmmen,"Cantidad de RPM Mensual");
+                    barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                    barDataSet.setValueTextColor(Color.BLACK);
+                    barDataSet.setValueTextSize(16f);
+
+                    BarData barData = new BarData(barDataSet);
+                    barChart.setFitBars(true);
+                    barChart.setData(barData);
+                    barChart.getDescription().setText("Gráfica de barras");
+                    barChart.animateY(2000);
+                }
+
+            }
+        });
+
 
 
         semanas.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onClick(View v) {
+                periodoestadistica="Semanal";
                 for (int i = 0;i<7;  i++)
                 {
                     String fechas = LocalDate.now().minusDays(7-i).toString();
@@ -60,34 +122,15 @@ public class RPM extends AppCompatActivity {
                     fechasSemana.add(fechaF);
                 }
 
-                int z = 1;
-
-                for (String fecha : fechasSemana)
-                {
-
-                    System.out.println("Fechas semana: " + fecha);
-                    rpmsem.add(new BarEntry(z,5));
-                    z += 1;
-                }
-
-
-
-                barDataSet = new BarDataSet(rpmsem,"Cantidad de RPM Semanal");
-                barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-                barDataSet.setValueTextColor(Color.BLACK);
-                barDataSet.setValueTextSize(16f);
-
-                BarData barData = new BarData(barDataSet);
-                barChart.setFitBars(true);
-                barChart.setData(barData);
-                barChart.getDescription().setText("Gráfica de barras");
-                barChart.animateY(2000);
+                firebaseViewModel.ObtenerValEstadistica(UserID,TEstadistica,fechasSemana);
             }
         });
 
         mes.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onClick(View v) {
+                periodoestadistica="Mensual";
                 int j = 1;
 
                 for (int i = 0;i<30;  i++)
@@ -97,24 +140,7 @@ public class RPM extends AppCompatActivity {
                     fechasMes.add(fechamF);
                 }
 
-                for (String fechaM : fechasMes)
-                {
-
-                    System.out.println("Fechas semana: " + fechaM);
-                    rpmmen.add(new BarEntry(j,10));
-                    j += 1;
-                }
-
-                barDataSet = new BarDataSet(rpmmen,"Cantidad de RPM Mensual");
-                barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-                barDataSet.setValueTextColor(Color.BLACK);
-                barDataSet.setValueTextSize(16f);
-
-                BarData barData = new BarData(barDataSet);
-                barChart.setFitBars(true);
-                barChart.setData(barData);
-                barChart.getDescription().setText("Gráfica de barras");
-                barChart.animateY(2000);
+                firebaseViewModel.ObtenerValEstadistica(UserID,TEstadistica,fechasMes);
 
             }
         });
@@ -132,6 +158,50 @@ public class RPM extends AppCompatActivity {
         });
     }
 
+    public ArrayList<String> OrdenarValores(ArrayList<String> strings){
+        ArrayList Valoresfinales= new ArrayList();
 
+        if(periodoestadistica.equals("Semanal")){
+           ArrayList ValoresfinalesSema= new ArrayList();
+           for(int i=0;i<fechasSemana.size();i++)
+               ValoresfinalesSema.add("0");
+
+
+
+           for(String valores : strings){
+               int indice=fechasSemana.indexOf(valores.split("@")[1]);
+               if( indice !=-1) {
+                   ValoresfinalesSema.set(indice, valores.split("@")[0]);
+               }
+           }
+
+
+
+            Valoresfinales=ValoresfinalesSema;
+        }
+        else{
+
+                ArrayList ValoresfinalesMensu= new ArrayList();
+                for(int i=0;i<fechasMes.size();i++)
+                    ValoresfinalesMensu.add("0");
+
+
+
+                for(String valores : strings){
+                    int indice=fechasMes.indexOf(valores.split("@")[1]);
+                    if( indice !=-1) {
+                       // Log.d("STRINGS","Indice: "+indice);
+                       // Log.d("STRINGS","Valor: "+valores.split("@")[0]);
+                        ValoresfinalesMensu.set(indice, valores.split("@")[0]);
+                    }
+                }
+
+                Valoresfinales=ValoresfinalesMensu;
+
+        }
+
+
+        return Valoresfinales;
+    }
 
 }

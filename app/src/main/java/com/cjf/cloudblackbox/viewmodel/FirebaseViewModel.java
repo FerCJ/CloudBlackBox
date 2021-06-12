@@ -25,6 +25,7 @@ public class FirebaseViewModel extends AndroidViewModel {
     private  MutableLiveData<Boolean> ContraseñaCambiada;
     private MutableLiveData<ArrayList<String>> Ubicacion= new MutableLiveData<>();
     public MutableLiveData<ArrayList<String>> UbicacionNew=Ubicacion;
+    private MutableLiveData<ArrayList<String>> ValEstadistica;
 
     public FirebaseViewModel(@NonNull Application application) {
         super(application);
@@ -38,7 +39,7 @@ public class FirebaseViewModel extends AndroidViewModel {
         ValidarUsuario=repositorioAPP.getValidarUsuario();
         ContraseñaCambiada=repositorioAPP.getContraseñaCambiada();
         Trayectorias = repositorioAPP.getTrayectorias();
-
+        ValEstadistica = repositorioAPP.getValEstadistica();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -95,4 +96,9 @@ public class FirebaseViewModel extends AndroidViewModel {
     public void ObtenerTrayectoriaSeleccionada(String UserID, String NombreTrayectoria){repositorioAPP.ObtenerTrayectoriaSeleccionada(UserID,NombreTrayectoria);}
 
     public MutableLiveData<String> getTrayectoriaSeleccionada(){return TrayectoriaSeleccionada;}
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public void ObtenerValEstadistica(String UserID,String TEstadistica,ArrayList<String> Fechas){repositorioAPP.ObtenerValEstadistica(UserID,TEstadistica,Fechas);}
+
+    public  MutableLiveData<ArrayList<String>> getValEstadistica(){return ValEstadistica;}
 }

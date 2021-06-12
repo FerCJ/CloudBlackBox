@@ -87,6 +87,7 @@ public class Estadisticas extends AppCompatActivity implements onOpcionListener{
             case 3:
                 intent = new Intent(this, RPM.class);
                 intent.putExtra("ID",UserID);
+                intent.putExtra("Tipo","Rpm");
                 startActivity(intent);
                 break;
            /* case 4:

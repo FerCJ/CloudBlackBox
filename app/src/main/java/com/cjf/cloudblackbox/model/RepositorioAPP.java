@@ -4,6 +4,7 @@ import android.app.Application;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
+import android.view.ViewDebug;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.annotation.RequiresApi;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
+import com.github.mikephil.charting.data.BarEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -20,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -43,6 +46,9 @@ public class RepositorioAPP {
     private MutableLiveData<String> ValidarUsuario;
     private MutableLiveData<Boolean> ContraseñaCambiada;
     private MutableLiveData<ArrayList<String>> Trayectorias;
+    private MutableLiveData<ArrayList<String>> ValEstadistica;
+    private ArrayList<String> ValoresEsta= new ArrayList<>();
+    int contador=0;
     private static final String TAG2 = "Repositorio";
     private ArrayList<String> UbicacionReal=new ArrayList<>();
     private MutableLiveData<ArrayList<String>> ubicacionN= new MutableLiveData<>();
@@ -66,6 +72,7 @@ public class RepositorioAPP {
         ValidarUsuario=new MutableLiveData<>();
         ContraseñaCambiada= new MutableLiveData<>();
         Trayectorias = new MutableLiveData<>();
+        ValEstadistica = new MutableLiveData<>();
 
     }
 
@@ -379,6 +386,30 @@ public class RepositorioAPP {
 
     public MutableLiveData<String> getTrayectoriaSeleccionada() { return TrayectoriaSeleccionada; }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public void ObtenerValEstadistica(final String UserID,final String TEstadistica, final ArrayList<String> Fechas) {
 
+            firebaseFirestore.collection("Estadisticas")
+                    .get().addOnCompleteListener(application.getMainExecutor(), new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if(document.get("UserId").toString().equals(UserID) && document.get("Tipo").toString().equals(TEstadistica) ){
+                                if(Fechas.contains(document.get("Fecha").toString())) {
+                                    ValoresEsta.add(document.get("Vpromedio").toString() + "@" + document.get("Fecha").toString());
+                                }
+                            }
+                        }
+                        ValEstadistica.postValue(ValoresEsta);
+
+                    }
+                }
+            });
+
+    }
+
+    public MutableLiveData<ArrayList<String>> getValEstadistica() { return ValEstadistica; }
 }
 
