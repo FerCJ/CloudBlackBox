@@ -10,24 +10,14 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/barraVideo"
         android:layout_width="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <LinearLayout
-        android:id="@+id/llVsc"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        Bottom_toBottomOf="@+id/llPerfil"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/llVcs2"
+            android:id="@+id/llVsc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -65,50 +55,62 @@
                 android:id="@+id/progressBarVsc"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/btnConectarBTVsc"
-                android:layout_width="311dp"
-                android:layout_height="53dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="15dp"
-                android:background="@color/colorAccent"
-                android:fontFamily="@font/roboto"
-                android:text="@string/seleccionar_btn"
-                android:textColor="#FFFFFF"
-                android:textColorLink="#FFFFFF"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvListaVsc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            android:paddingRight="10dp"
-            tools:ignore="MissingConstraints"></androidx.recyclerview.widget.RecyclerView>
+    </com.google.android.material.appbar.AppBarLayout>
 
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorAccent" />
+    <Button
+        android:id="@+id/btnConectarBTVsc"
+        android:layout_width="311dp"
+        android:layout_height="53dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="84dp"
+        android:background="@color/colorAccent"
+        android:fontFamily="@font/roboto"
+        android:text="@string/seleccionar_btn"
+        android:textColor="#FFFFFF"
+        android:textColorLink="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/barraVideo" />
 
-        <VideoView
-            android:id="@+id/vvVideoVsc"
-            android:layout_marginTop="50dp"
-            android:layout_width="match_parent"
-            android:layout_height="232dp"
-            android:layout_gravity="center_vertical"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="239dp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvListaVsc"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:layout_marginTop="52dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/btnConectarBTVsc"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"></androidx.recyclerview.widget.RecyclerView>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.561"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <VideoView
+        android:id="@+id/vvVideoVsc"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.927"
+        tools:layout_editor_absoluteX="0dp" />
 
 
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,10 +9,10 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/barraVideo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
         Bottom_toBottomOf="@+id/llPerfil"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -67,22 +67,22 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvListaVideos"
         android:layout_width="match_parent"
-        android:layout_height="340dp"
+        android:layout_height="310dp"
+        android:layout_marginTop="8dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnVideosSC"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.162"
+        app:layout_constraintTop_toBottomOf="@+id/barraVideo"
         tools:ignore="MissingConstraints"></androidx.recyclerview.widget.RecyclerView>
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorAccent"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.561"
