@@ -158,6 +158,10 @@ public class BluetoothService {
             }
         }
 
+        public void cerrar() throws IOException {
+            mmSocket.close();
+        }
+
         public void cancel() {
             try {
                 Log.d(TAG, "cancel: Closing Client Socket.");
@@ -178,6 +182,9 @@ public class BluetoothService {
         mmConnectedThread.start();
     }
 
+    public void cerrar() throws IOException {
+        mmConnectedThread.cerrar();
+    }
     public void write(String Msg){
         byte [] Bytes;
         Bytes=Msg.getBytes();

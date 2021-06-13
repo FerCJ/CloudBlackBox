@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Set;
 import java.util.UUID;
@@ -98,6 +99,12 @@ public class MasOpciones extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
+
+                try {
+                    mmBluetoothService.cerrar();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         });

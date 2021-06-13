@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.cjf.cloudblackbox.adaptador.SeleccionarModoAdaptador;
 import com.cjf.cloudblackbox.pojo.Modos;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Set;
@@ -92,6 +93,11 @@ public class SeleccionarModo extends AppCompatActivity implements onOpcionListen
             @Override
             public void onClick(View v)
             {
+                try {
+                    mmBluetoothService.cerrar();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         });

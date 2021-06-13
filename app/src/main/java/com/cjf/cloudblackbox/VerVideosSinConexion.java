@@ -26,6 +26,7 @@ import com.cjf.cloudblackbox.adaptador.VerVideosAdaptador;
 import com.cjf.cloudblackbox.pojo.ListaVideos;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,9 +110,18 @@ public class VerVideosSinConexion extends AppCompatActivity implements View.OnCl
         btnRegresarVsc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Videos.clear();
+                try {
+                    mmBluetoothService.cerrar();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         });
+
+
 
     }
 
