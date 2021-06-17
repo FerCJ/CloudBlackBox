@@ -25,6 +25,8 @@
         <activity android:name=".RPM" />
         <activity android:name=".MasOpciones" />
         <activity android:name=".Gasolina" />
+        <activity android:name=".Bateria" />
+        <activity android:name=".Velocidad" />
         <activity android:name=".Estadisticas" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

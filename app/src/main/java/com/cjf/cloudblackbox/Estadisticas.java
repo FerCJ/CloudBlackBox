@@ -32,11 +32,11 @@ public class Estadisticas extends AppCompatActivity implements onOpcionListener{
 
         estadisticas = new ArrayList<Estadistica>();
 
-        estadisticas.add(new Estadistica(R.drawable.gasolinaicon,"Consumo de gasolina"));
+        //estadisticas.add(new Estadistica(R.drawable.gasolinaicon,"Consumo de gasolina"));
         estadisticas.add(new Estadistica(R.drawable.velocidadicon,"Velocidad promedio"));
         estadisticas.add(new Estadistica(R.drawable.estadisticasicon,"Estado batería"));
         estadisticas.add(new Estadistica(R.drawable.rpmicon,"RPM Promedio"));
-        estadisticas.add(new Estadistica(R.drawable.distanciaicon,"Distancia recorrida"));
+       // estadisticas.add(new Estadistica(R.drawable.distanciaicon,"Distancia recorrida"));
 
         listaEstadisticas = (RecyclerView) findViewById(R.id.rvEstadistica);
         GridLayoutManager glm = new GridLayoutManager(this,2);
@@ -71,29 +71,24 @@ public class Estadisticas extends AppCompatActivity implements onOpcionListener{
         switch (posicion) {
 
             case 0:
-                Intent intent = new Intent(this, Gasolina.class );
+                Intent intent = new Intent(this, Velocidad.class );
                 intent.putExtra("ID",UserID);
+                intent.putExtra("Tipo","Velocidad");
                 startActivity(intent);
                 break;
-           /* case 1:
-                Log.i(TAG, "Entro a la posicion 1 ");
-                Intent intent2 = new Intent(MenuPrincipal.this, VerVideos.class);
+           case 1:
+
+                Intent intent2 = new Intent(this, Bateria.class);
+                intent2.putExtra("ID",UserID);
+                intent2.putExtra("Tipo","Bateria");
                 startActivity(intent2);
                 break;
             case 2:
-                intent = new Intent(this, Trayectorias.class);
-                startActivity(intent);
-                break;*/
-            case 3:
-                intent = new Intent(this, RPM.class);
-                intent.putExtra("ID",UserID);
-                intent.putExtra("Tipo","Rpm");
-                startActivity(intent);
+                Intent intent3 = new Intent(this, RPM.class);
+                intent3.putExtra("ID",UserID);
+                intent3.putExtra("Tipo","Rpm");
+                startActivity(intent3);
                 break;
-           /* case 4:
-                intent = new Intent(this, Estadisticas.class);
-                startActivity(intent);
-                break;*/
             default:
                 break;
         }
