@@ -38,7 +38,8 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
     private RecyclerView listaTrayectorias;
     private MapView mapa;
     private GoogleMap rutas;
-    Polyline polyline1;
+    private Polyline polyline1;
+    private Marker markerI, markerF;
     private List<Polyline> polylines = new ArrayList<>();
 
     private List<Trayectoria> trayectorias = new ArrayList<>();
@@ -226,6 +227,11 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
     public void obtenerCoordenadas(String trayectorias)
     {
 
+        if (markerI != null && markerF !=null)
+        {
+            markerI.remove();
+            markerF.remove();
+        }
         int startTrayecto, stopTrayecto,startCoor, stopCoor, aux1, aux2, aux3;
         startTrayecto = trayectorias.indexOf("#");
 
@@ -259,12 +265,12 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
             }
             float zoomlevel = 16.0f;
             LatLng sydney = coordenadasLista.get(0);
-            rutas.addMarker(new MarkerOptions().position(sydney).title("Inicio"));
+            markerI = rutas.addMarker(new MarkerOptions().position(sydney).title("Inicio"));
             rutas.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomlevel));
 
             polylines.get(n).setPoints(coordenadasLista);
             sydney = coordenadasLista.get(coordenadasLista.size()-1);
-            rutas.addMarker(new MarkerOptions().position(sydney).title("Fin"));
+            markerF = rutas.addMarker(new MarkerOptions().position(sydney).title("Fin"));
             System.out.println("");
             System.out.println("Fin trayecto.........");
             System.out.println("");
