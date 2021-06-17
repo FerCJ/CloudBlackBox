@@ -22,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -38,6 +39,7 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
     private MapView mapa;
     private GoogleMap rutas;
     Polyline polyline1;
+    private List<Polyline> polylines = new ArrayList<>();
 
     private List<Trayectoria> trayectorias = new ArrayList<>();
     private FirebaseViewModel firebaseViewModel;
@@ -83,6 +85,8 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
                     adaptador.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+
+
                             NombreTrayectoriaSeleccionada = trayectorias.get(listaTrayectorias.getChildAdapterPosition(view)).getFecha();
                             Log.d("Trayectoria: ", NombreTrayectoriaSeleccionada);
                             ObtenerLinkTrayectoriaSeleccionada(userID,NombreTrayectoriaSeleccionada);
@@ -132,16 +136,11 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
         float zoomLevel = 12.0f; //This goes up to 21
         mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomLevel));
 
-        polyline1 = rutas.addPolyline(new PolylineOptions()
-                .clickable(true));
-
-        if (coordenadasLista.size() > 0)
+        //polyline1 = rutas.addPolyline(new PolylineOptions()
+          //      .clickable(true));
+        for (int i = 0; i < 10; i++)
         {
-            for (LatLng coordenada: coordenadasLista)
-            {
-                Polyline polyline1 = mapa.addPolyline(new PolylineOptions()
-                        .add(coordenada));
-            }
+            polylines.add(rutas.addPolyline(new PolylineOptions().clickable(true)));
         }
 
     }
@@ -235,8 +234,11 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
         System.out.println(trayectorias);
         aux1 = trayectorias.indexOf("#",startTrayecto+1);
 
-        while(aux1 != -1)
+        int n = 0;
+
+        while(aux1 != -1 && startTrayecto != -1)
         {
+
             coordenadasLista.clear();
             trayecto = trayectorias.substring(startTrayecto+1,aux1);
 
@@ -260,14 +262,15 @@ public class Trayectorias extends AppCompatActivity implements OnMapReadyCallbac
             rutas.addMarker(new MarkerOptions().position(sydney).title("Inicio"));
             rutas.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomlevel));
 
-            polyline1.setPoints(coordenadasLista);
+            polylines.get(n).setPoints(coordenadasLista);
             sydney = coordenadasLista.get(coordenadasLista.size()-1);
             rutas.addMarker(new MarkerOptions().position(sydney).title("Fin"));
             System.out.println("");
             System.out.println("Fin trayecto.........");
             System.out.println("");
-            startTrayecto = trayectorias.indexOf("#",aux1-1);
+            startTrayecto = trayectorias.indexOf("#",aux1+1);
             aux1 = trayectorias.indexOf("#",startTrayecto+1);
+            n += 1;
         }
     }
 
