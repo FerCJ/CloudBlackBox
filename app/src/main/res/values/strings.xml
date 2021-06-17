@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CloudBlackbox</string>
+    <string name="app_name">Cloud Blackbox</string>
     <string name="menu_contacto">Contacto</string>
     <string name="menu_about">Acerca de</string>
 
@@ -20,8 +20,8 @@
     <string name="registro_btn_Registrar">Registrar</string>
     <string name="registro__confirmarpass">Confirmar contraseña</string>
     <string name="registro_tel1">Tu numero telefónico</string>
-    <string name="registro_tel2">Télefono de emergencia 2</string>
-    <string name="registro_tel3">Télefono de emergencia 3</string>
+    <string name="registro_tel2">Télefono de emergencia 1</string>
+    <string name="registro_tel3">Télefono de emergencia 2</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="registro_Nombre">"Nombre"</string>
     <string name="prompt_email">Email</string>
