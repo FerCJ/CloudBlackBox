@@ -94,7 +94,10 @@ public class SeleccionarModo extends AppCompatActivity implements onOpcionListen
             public void onClick(View v)
             {
                 try {
-                    mmBluetoothService.cerrar();
+                    if (mmBluetoothService != null)
+                    {
+                        mmBluetoothService.cerrar();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

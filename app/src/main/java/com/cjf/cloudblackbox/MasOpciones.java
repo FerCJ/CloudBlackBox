@@ -101,7 +101,10 @@ public class MasOpciones extends AppCompatActivity {
             {
 
                 try {
-                    mmBluetoothService.cerrar();
+                    if (mmBluetoothService != null)
+                    {
+                        mmBluetoothService.cerrar();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

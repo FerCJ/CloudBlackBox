@@ -113,7 +113,10 @@ public class VerVideosSinConexion extends AppCompatActivity implements View.OnCl
 
                 Videos.clear();
                 try {
-                    mmBluetoothService.cerrar();
+                    if (mmBluetoothService != null)
+                    {
+                        mmBluetoothService.cerrar();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
